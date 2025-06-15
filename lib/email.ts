@@ -15,7 +15,7 @@ export async function sendPasswordResetEmail({ email, token, name }: SendPasswor
 
   try {
     const { data, error } = await resend.emails.send({
-      from: "Your App <noreply@yourdomain.com>",
+      from: "Puntland Mining <noreply@plmininglicense.com>",
       to: email,
       subject: "Reset your password",
       react: ResetPasswordEmail({ resetLink, userName: name }),
