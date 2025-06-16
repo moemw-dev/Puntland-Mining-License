@@ -39,7 +39,7 @@ export function LicenseActionsCell({ license }: LicenseActionsCellProps) {
   const router = useRouter()
 
   // Check if user has admin privileges
-  const hasAdminPrivileges = ["SUPER_ADMIN", "DIRECTOR", "MINISTER"].includes(session?.user?.role || "")
+  const hasAdminPrivileges = ["DIRECTOR", "MINISTER"].includes(session?.user?.role || "")
 
   // Handle delete action
   const handleDelete = async () => {
@@ -100,7 +100,7 @@ export function LicenseActionsCell({ license }: LicenseActionsCellProps) {
   // Handle copy to clipboard
   const handleCopyId = async () => {
     try {
-      await navigator.clipboard.writeText(license.id)
+      await navigator.clipboard.writeText(license.license_ref_id)
       toast.success("ID copied to clipboard")
     } catch (error) {
       toast.error("Failed to copy ID"+error)

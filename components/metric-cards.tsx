@@ -73,25 +73,25 @@ export default async function MetricCards() {
   if(!totalLicenses && !totalSamples && !activeLicenses.length && !expiredLicenses.length) return (
     <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
       <MetricCard
-        value={"Loading..."}
+        value={"0"}
         label={"Loading..."}
         icon={<FileBadge className="h-6 w-6 text-indigo-600" />}
         iconClassName="bg-indigo-100"
       />
       <MetricCard
-        value={"Loading..."}
+        value={"0"}
         label={"Loading..."}
         icon={<FileCheck2 className="h-6 w-6 text-cyan-600" />}
         iconClassName="bg-cyan-100"
       />
       <MetricCard
-        value={"Loading..."}
+        value={"0"}
         label={"Loading..."}
         icon={<ShieldAlert className="h-6 w-6 text-orange-600" />}
         iconClassName="bg-orange-100"
       />
       <MetricCard
-        value={"Loading..."}
+        value={"0"}
         label={"Loading..."}
         icon={<File className="h-6 w-6 text-pink-600" />}
         iconClassName="bg-pink-100"

@@ -30,6 +30,7 @@ type LicenseData = {
   license_type: string;
   license_category: string;
   license_area: string;
+  status: string;
   created_at: string;
   expire_date: string;
   location: {
@@ -75,6 +76,19 @@ export default function VerifyLicensePage() {
         }
 
         const data = await response.json();
+
+        if (data.status === "REVOKED") {
+          setError("This license has been revoked or suspended.");
+          setLicenseData(null);
+          return;
+        }
+
+        if (data.status !== "APPROVED") {
+          setError("License not approved or does not exist.");
+          setLicenseData(null);
+          return;
+        }
+
         setLicenseData(data);
         toast.success("License verified successfully!");
       } catch (err) {

@@ -94,7 +94,7 @@ const StepTwo = ({ onNext, onBack, formData }: StepTwoProps) => {
             name="id_card_number"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>ID Card Number (Lambarka Aqoonsiga)</FormLabel>
+                <FormLabel>ID Card Number / Passport Number</FormLabel>
                 <FormControl>
                   <div className="relative">
                     <IdCard className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500" />

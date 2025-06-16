@@ -90,8 +90,8 @@ export function LicenseVerificationForm() {
             <h3 className="font-medium text-blue-900 dark:text-blue-100">Example License Reference IDs:</h3>
             <div className="space-y-1 text-sm text-blue-700 dark:text-blue-300">
               <p>• WTMB-2506-4870050989</p>
-              <p>• ARTG-1234-5678901234</p>
-              <p>• MINE-9876-5432109876</p>
+              <p>• WTMB-2506-4870033339</p>
+              <p>• WTMB-2506-4870022222</p>
             </div>
           </div>
         </CardContent>

@@ -14,7 +14,7 @@ export const licensesSchema = z.object({
 
   // 👉 Personal Info
   full_name: z.string().min(1, "Full name is required"),
-  mobile_number: z.string().min(1, "Mobile number is required"),
+  mobile_number: z.string().regex(/^\+[1-9]\d{1,14}$/, "Invalid phone number"),
   email_address: z.string().min(1, "Email address is required"),
   id_card_number: z.string().min(1, "ID card number is required"),
 
@@ -46,7 +46,7 @@ export const firstStepSchema = z.object({
 
 export const secondStepSchema = z.object({
   full_name: z.string().min(1, "Full name is required"),
-  mobile_number: z.string().min(1, "Mobile number is required"),
+  mobile_number: z.string().regex(/^\+[1-9]\d{1,14}$/, "Invalid phone number"),
   email_address: z.string().min(1, "Email address is required"),
   id_card_number: z.string().min(1, "ID card number is required"),
 })

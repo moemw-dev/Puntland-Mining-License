@@ -51,7 +51,7 @@ const StepFour = ({ onNext, onBack, formData }: StepFourProps) => {
   });
 
   const {
-    formState: { },
+    formState: {},
     setValue,
     watch,
   } = form;
@@ -79,12 +79,11 @@ const StepFour = ({ onNext, onBack, formData }: StepFourProps) => {
         "Small Scale Mining",
         "Artisanal Gold Mining",
         "Mining Equipment Rental",
-        "Stone Crusher"
+        "Stone Crusher",
       ],
     }),
     []
   );
-
 
   const getCategoriesForType = useCallback(
     (type: string): string[] => {
@@ -94,11 +93,15 @@ const StepFour = ({ onNext, onBack, formData }: StepFourProps) => {
   );
 
   // Region and district data for license area options
-  const regions = [
+  const miningArea = [
     "All Puntland Areas",
-    "Nugaal",
     "Bari",
+    "Cayn",
+    "Haylaan",
+    "Karkaar",
     "Mudug",
+    "Nugaal",
+    "Raas Casayr",
     "Sanaag",
     "Sool",
   ];
@@ -138,7 +141,7 @@ const StepFour = ({ onNext, onBack, formData }: StepFourProps) => {
     if (license_type && license_category) {
       const fee =
         fees[license_type as keyof typeof fees]?.[
-        license_category as keyof (typeof fees)["New License"]
+          license_category as keyof (typeof fees)["New License"]
         ] || "";
 
       // Only update if the fee has actually changed
@@ -256,9 +259,9 @@ const StepFour = ({ onNext, onBack, formData }: StepFourProps) => {
                         <SelectValue placeholder="Select mining area" />
                       </SelectTrigger>
                       <SelectContent>
-                        {regions.map((region) => (
-                          <SelectItem key={region} value={region}>
-                            {region}
+                        {miningArea.map((area, index) => (
+                          <SelectItem key={index} value={area}>
+                            {area}
                           </SelectItem>
                         ))}
                       </SelectContent>
@@ -279,19 +282,25 @@ const StepFour = ({ onNext, onBack, formData }: StepFourProps) => {
               <CardContent>
                 <div className="space-y-2">
                   <div className="flex justify-between">
-                    <span className="text-gray-600 dark:text-gray-200">License Type:</span>
+                    <span className="text-gray-600 dark:text-gray-200">
+                      License Type:
+                    </span>
                     <span className="font-medium">
                       {license_type || "Not selected"}
                     </span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-gray-600 dark:text-gray-200">License Category:</span>
+                    <span className="text-gray-600 dark:text-gray-200">
+                      License Category:
+                    </span>
                     <span className="font-medium">
                       {license_category || "Not selected"}
                     </span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-gray-600 dark:text-gray-200">Mining Area:</span>
+                    <span className="text-gray-600 dark:text-gray-200">
+                      Mining Area:
+                    </span>
                     <span className="font-medium">
                       {license_area || "Not selected"}
                     </span>

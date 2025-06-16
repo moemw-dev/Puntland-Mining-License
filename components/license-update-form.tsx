@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
-import { Loader2 } from 'lucide-react';
+import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
@@ -95,7 +95,7 @@ const formSchema = z.object({
 
   // Personal Information
   full_name: z.string().min(2, "Full name must be at least 2 characters"),
-  mobile_number: z.string().min(10, "Mobile number must be at least 10 digits"),
+  mobile_number: z.string().regex(/^\+[1-9]\d{1,14}$/, "Invalid phone number"),
   email_address: z.string().email("Invalid email address"),
   id_card_number: z.string().min(1, "ID card number is required"),
 
@@ -278,15 +278,22 @@ export function LicenseUpdateForm({
     return licenseCategories[type as keyof typeof licenseCategories] || [];
   };
 
-  // Reset category when license type changes
+  // Reset category when license type changes, but preserve valid existing categories
   useEffect(() => {
-    if (license_type && license_category) {
+    if (license_type) {
       const availableCategories = getCategoriesForType(license_type);
-      if (!availableCategories.includes(license_category)) {
-        form.setValue("license_category", "", { shouldValidate: true });
+      const currentCategory = form.getValues("license_category");
+
+      // Only reset if current category is not available for the selected license type
+      // and if this is actually a user-initiated change (not initial load)
+      if (currentCategory && !availableCategories.includes(currentCategory)) {
+        // Only reset if the license type has actually changed from the original
+        if (license_type !== license.license_type) {
+          form.setValue("license_category", "", { shouldValidate: true });
+        }
       }
     }
-  }, [license_type, license_category, form]);
+  }, [license_type, form, license.license_type]);
 
   // Fee structure
   const fees = {
@@ -309,16 +316,43 @@ export function LicenseUpdateForm({
   // Calculate fee based on selections
   useEffect(() => {
     if (license_type && license_category) {
+      // Map the full category names to the keys used in the fees object
+      const categoryKey = license_category.includes("Large Scale")
+        ? "Large Scale Mining"
+        : license_category.includes("Small Scale")
+          ? "Small Scale Mining"
+          : license_category.includes("Artisanal")
+            ? "Artisanal Gold Mining"
+            : license_category.includes("Equipment")
+              ? "Mining Equipment Rental"
+              : license_category.includes("Stone")
+                ? "Stone Crusher"
+                : "";
+
       const fee =
         fees[license_type as keyof typeof fees]?.[
-          license_category as keyof (typeof fees)["New License"]
+          categoryKey as keyof (typeof fees)["New License"]
         ] || "";
 
-      if (form.getValues("calculated_fee") !== fee) {
+      if (fee && form.getValues("calculated_fee") !== fee) {
         form.setValue("calculated_fee", fee, { shouldValidate: true });
       }
     }
   }, [license_type, license_category, form]);
+
+  // Mining area
+  const miningArea = [
+    "All Puntland Areas",
+    "Bari",
+    "Cayn",
+    "Haylaan",
+    "Karkaar",
+    "Mudug",
+    "Nugaal",
+    "Raas Casayr",
+    "Sanaag",
+    "Sool",
+  ];
 
   // Handle form submission
   async function onSubmit(values: z.infer<typeof formSchema>) {
@@ -775,9 +809,9 @@ export function LicenseUpdateForm({
                             <SelectValue placeholder="Select mining area" />
                           </SelectTrigger>
                           <SelectContent>
-                            {regions.map((region) => (
-                              <SelectItem key={region.id} value={region.name}>
-                                {region.name}
+                            {miningArea.map((area, index) => (
+                              <SelectItem key={index} value={area}>
+                                {area}
                               </SelectItem>
                             ))}
                           </SelectContent>
@@ -793,9 +827,14 @@ export function LicenseUpdateForm({
                   name="calculated_fee"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Calculated Fee</FormLabel>
+                      <FormLabel>Calculated Fee (USD)</FormLabel>
                       <FormControl>
-                        <Input placeholder="Enter calculated fee" {...field} />
+                        <Input
+                          placeholder="Fee will be calculated automatically"
+                          {...field}
+                          disabled
+                          className="bg-muted"
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>

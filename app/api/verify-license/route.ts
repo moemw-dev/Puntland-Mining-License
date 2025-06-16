@@ -1,33 +1,36 @@
-import config from "@/lib/config/config"
-import { type NextRequest, NextResponse } from "next/server"
+import config from "@/lib/config/config";
+import { type NextRequest, NextResponse } from "next/server";
 
 export interface Root {
-  id: string
-  license_ref_id: string
-  company_name: string
-  business_type: string
-  license_type: string
-  license_category: string
-  license_area: string
-  created_at: string
-  expire_date: string
-  location: Location
+  id: string;
+  license_ref_id: string;
+  company_name: string;
+  business_type: string;
+  license_type: string;
+  license_category: string;
+  license_area: string;
+  created_at: string;
+  expire_date: string;
+  location: Location;
+  status: "PENDING" | "APPROVED" | "REVOKED";
 }
 
 export interface Location {
-  id: string
-  name: string
-  region_id: string
-  created_at: string
+  id: string;
+  name: string;
+  region_id: string;
+  created_at: string;
 }
 
-
 export async function GET(request: NextRequest) {
-  const searchParams = request.nextUrl.searchParams
-  const refId = searchParams.get("ref_id")
+  const searchParams = request.nextUrl.searchParams;
+  const refId = searchParams.get("ref_id");
 
   if (!refId) {
-    return NextResponse.json({ error: "License reference ID is required" }, { status: 400 })
+    return NextResponse.json(
+      { error: "License reference ID is required" },
+      { status: 400 }
+    );
   }
 
   try {
@@ -37,19 +40,19 @@ export async function GET(request: NextRequest) {
       headers: {
         "Content-Type": "application/json",
       },
-    })
+    });
 
     if (!response.ok) {
-      throw new Error("Failed to fetch licenses")
+      throw new Error("Failed to fetch licenses");
     }
 
-    const licenses = await response.json()
+    const licenses = await response.json();
 
     // Find the license by reference ID
-    const license = licenses.find((l:Root ) => l.license_ref_id === refId)
+    const license = licenses.find((l: Root) => l.license_ref_id === refId);
 
     if (!license) {
-      return NextResponse.json({ error: "License not found" }, { status: 404 })
+      return NextResponse.json({ error: "License not found" }, { status: 404 });
     }
 
     // Return only public information (remove sensitive data)
@@ -64,11 +67,15 @@ export async function GET(request: NextRequest) {
       created_at: license.created_at,
       expire_date: license.expire_date,
       location: license.location,
-    }
+      status: license.status
+    };
 
-    return NextResponse.json(publicLicenseInfo)
+    return NextResponse.json(publicLicenseInfo);
   } catch (error) {
-    console.error("Error verifying license:", error)
-    return NextResponse.json({ error: "Internal server error" }, { status: 500 })
+    console.error("Error verifying license:", error);
+    return NextResponse.json(
+      { error: "Internal server error" },
+      { status: 500 }
+    );
   }
 }

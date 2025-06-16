@@ -105,9 +105,6 @@ export const UpdateLicense = actionClient.schema(updateLicenseSchema).action(asy
       return { error: "No fields to update" }
     }
 
-    console.log("Updating license with ID:", id)
-    console.log("Update data:", filteredUpdateData)
-
     // Update the license
     await db
       .update(licenses)
