@@ -3,8 +3,16 @@
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { ArrowLeft } from "lucide-react"
+import { useSession } from "next-auth/react"
+import { redirect } from "next/navigation"
+
 
 export default function NotFound() {
+   const { data: session } = useSession()
+
+   if (!session) {
+    return redirect("/")
+  }
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-50 to-gray-100">
       <div className="max-w-md w-full mx-auto text-center px-6">

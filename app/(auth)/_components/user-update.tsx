@@ -134,7 +134,7 @@ export default function UserUpdateForm({ user }: UserUpdateFormProps) {
         toast.success("User updated successfully!");
         // Clear password field after successful update
         setFormData((prev) => ({ ...prev, password: "" }));
-        router.refresh();
+        router.push("/users");
       }
     } catch (error) {
       console.error("Update error:", error);
@@ -256,7 +256,7 @@ export default function UserUpdateForm({ user }: UserUpdateFormProps) {
               <h4 className="font-medium text-gray-900">Current User Info</h4>
               <div className="text-sm text-gray-600 space-y-1">
                 <p>
-                  <span className="font-medium">ID:</span> {user.id}
+                  <span className="font-medium">Name:</span> {user.name}
                 </p>
                 <p>
                   <span className="font-medium">Created:</span>{" "}
@@ -265,10 +265,6 @@ export default function UserUpdateForm({ user }: UserUpdateFormProps) {
                 <p>
                   <span className="font-medium">Last Updated:</span>{" "}
                   {new Date(user.updatedAt).toLocaleDateString()}
-                </p>
-                <p>
-                  <span className="font-medium">Email Verified:</span>{" "}
-                  {user.emailVerified ? "Yes" : "No"}
                 </p>
               </div>
             </div>

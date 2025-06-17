@@ -1,5 +1,6 @@
 "use server";
 
+import { auth } from "@/auth";
 import { db } from "@/database/drizzle";
 import { sampleAnalysis } from "@/database/schema";
 import { actionClient } from "@/lib/safe-action";
@@ -11,6 +12,7 @@ import {
 } from "@/types/sample.type";
 import { eq } from "drizzle-orm";
 import { and, gte, lte } from "drizzle-orm";
+import { redirect } from "next/navigation";
 
 export const RegisterSampleAnalysis = actionClient
   .schema(sampleAnalysisSchema)
@@ -18,6 +20,14 @@ export const RegisterSampleAnalysis = actionClient
     async ({
       parsedInput: { name, passport_no, kilo_gram },
     }) => {
+        // Get the user's session
+          const session = await auth();
+      
+          if (!session || !session.user) {
+            return redirect('/login');
+          }
+
+
       const prefix = "MOEMW/DG";
       const now = new Date();
 

@@ -15,8 +15,7 @@ export async function middleware(request: NextRequest) {
   // Define simple route-role mapping
   const protectedRoutes = {
     "/users": ["SUPER_ADMIN"],
-    "/reports": ["SUPER_ADMIN", "DIRECTOR", "MINISTER"],
-    "/sample-analysis": ["SUPER_ADMIN", "DIRECTOR"],
+    "/sample-analysis": ["SUPER_ADMIN", "GENERAL_DIRECTOR", "DIRECTOR"],
   }
 
   // Check if user is logged in

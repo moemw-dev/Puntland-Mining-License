@@ -1,43 +1,51 @@
-"use client"
+"use client";
 
-import { zodResolver } from "@hookform/resolvers/zod"
-import { useForm } from "react-hook-form"
-import { useState, useEffect } from "react"
-import { useRouter } from "next/navigation"
-import { Eye, EyeOff, Check, X } from "lucide-react"
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { Eye, EyeOff, Check, X } from "lucide-react";
 
-import { Button } from "@/components/ui/button"
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
-import { Input } from "@/components/ui/input"
-import { toast } from "sonner"
+import { Button } from "@/components/ui/button";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { toast } from "sonner";
 
-import { signUpSchema } from "@/lib/validations"
-import { signUp } from "@/lib/actions/auth.action"
+import { signUpSchema } from "@/lib/validations";
+import { signUp } from "@/lib/actions/auth.action";
 
 type SignUpFormData = {
-  name: string
-  email: string
-  password: string
-}
+  name: string;
+  email: string;
+  password: string;
+};
 
 type PasswordRequirements = {
-  minLength: boolean
-  hasUppercase: boolean
-  hasNumber: boolean
-  hasSymbol: boolean
-}
+  minLength: boolean;
+  hasUppercase: boolean;
+  hasNumber: boolean;
+  hasSymbol: boolean;
+};
 
 export function SignUpForm() {
-  const [showPassword, setShowPassword] = useState(false)
-  const [loading, setLoading] = useState(false)
-  const [passwordRequirements, setPasswordRequirements] = useState<PasswordRequirements>({
-    minLength: false,
-    hasUppercase: false,
-    hasNumber: false,
-    hasSymbol: false,
-  })
+  const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [passwordRequirements, setPasswordRequirements] =
+    useState<PasswordRequirements>({
+      minLength: false,
+      hasUppercase: false,
+      hasNumber: false,
+      hasSymbol: false,
+    });
 
-  const router = useRouter()
+  const router = useRouter();
 
   const form = useForm({
     resolver: zodResolver(signUpSchema),
@@ -46,9 +54,9 @@ export function SignUpForm() {
       email: "",
       password: "",
     },
-  })
+  });
 
-  const password = form.watch("password")
+  const password = form.watch("password");
 
   useEffect(() => {
     if (password) {
@@ -57,51 +65,57 @@ export function SignUpForm() {
         hasUppercase: /[A-Z]/.test(password),
         hasNumber: /\d/.test(password),
         hasSymbol: /[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]/.test(password),
-      })
+      });
     } else {
       setPasswordRequirements({
         minLength: false,
         hasUppercase: false,
         hasNumber: false,
         hasSymbol: false,
-      })
+      });
     }
-  }, [password])
+  }, [password]);
 
   const onSubmit = async (data: SignUpFormData) => {
-    setLoading(true) 
+    setLoading(true);
 
     try {
-      const result = await signUp(data)
+      const result = await signUp(data);
 
       if (!result.success) {
         if (result.error?.includes("already exists")) {
-          form.setError("email", { type: "manual", message: result.error })
+          form.setError("email", { type: "manual", message: result.error });
         } else {
-          toast.error(result.error || "An error occurred during signup")
+          toast.error(result.error || "An error occurred during signup");
         }
       } else {
         toast.success("Account created successfully!")
         router.push("/users")
       }
     } catch (error) {
-      toast.error("An unexpected error occurred")
-      console.error("Signup error:", error)
+      toast.error("An unexpected error occurred");
+      console.error("Signup error:", error);
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   const togglePasswordVisibility = () => {
-    setShowPassword(!showPassword)
-  }
+    setShowPassword(!showPassword);
+  };
 
   const RequirementItem = ({ met, text }: { met: boolean; text: string }) => (
-    <div className={`flex items-center gap-2 text-sm ${met ? "text-green-600" : "text-gray-500"}`}>
-      {met ? <Check className="h-4 w-4 text-green-600" /> : <X className="h-4 w-4 text-gray-400" />}
+    <div
+      className={`flex items-center gap-2 text-sm ${met ? "text-green-600" : "text-gray-500"}`}
+    >
+      {met ? (
+        <Check className="h-4 w-4 text-green-600" />
+      ) : (
+        <X className="h-4 w-4 text-gray-400" />
+      )}
       <span>{text}</span>
     </div>
-  )
+  );
 
   return (
     <div className="p-10">
@@ -115,7 +129,11 @@ export function SignUpForm() {
               <FormItem>
                 <FormLabel>Full Name</FormLabel>
                 <FormControl>
-                  <Input placeholder="Enter your full name" {...field} disabled={loading} />
+                  <Input
+                    placeholder="Enter your full name"
+                    {...field}
+                    disabled={loading}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -129,7 +147,12 @@ export function SignUpForm() {
               <FormItem>
                 <FormLabel>Email</FormLabel>
                 <FormControl>
-                  <Input type="email" placeholder="Enter your email" {...field} disabled={loading} />
+                  <Input
+                    type="email"
+                    placeholder="Enter your email"
+                    {...field}
+                    disabled={loading}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -158,7 +181,9 @@ export function SignUpForm() {
                       size="sm"
                       className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
                       onClick={togglePasswordVisibility}
-                      aria-label={showPassword ? "Hide password" : "Show password"}
+                      aria-label={
+                        showPassword ? "Hide password" : "Show password"
+                      }
                       disabled={loading}
                     >
                       {showPassword ? (
@@ -172,12 +197,26 @@ export function SignUpForm() {
 
                 {/* Password Requirements */}
                 <div className="mt-3 p-4 bg-gray-50 dark:bg-gray-900 rounded-md border">
-                  <p className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">Password must contain:</p>
+                  <p className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
+                    Password must contain:
+                  </p>
                   <div className="space-y-2">
-                    <RequirementItem met={passwordRequirements.minLength} text="At least 8 characters" />
-                    <RequirementItem met={passwordRequirements.hasUppercase} text="One uppercase letter (A-Z)" />
-                    <RequirementItem met={passwordRequirements.hasNumber} text="One number (0-9)" />
-                    <RequirementItem met={passwordRequirements.hasSymbol} text="One special character (!@#$%^&*)" />
+                    <RequirementItem
+                      met={passwordRequirements.minLength}
+                      text="At least 8 characters"
+                    />
+                    <RequirementItem
+                      met={passwordRequirements.hasUppercase}
+                      text="One uppercase letter (A-Z)"
+                    />
+                    <RequirementItem
+                      met={passwordRequirements.hasNumber}
+                      text="One number (0-9)"
+                    />
+                    <RequirementItem
+                      met={passwordRequirements.hasSymbol}
+                      text="One special character (!@#$%^&*)"
+                    />
                   </div>
                 </div>
 
@@ -192,7 +231,7 @@ export function SignUpForm() {
         </form>
       </Form>
     </div>
-  )
+  );
 }
 
-export default SignUpForm
+export default SignUpForm;

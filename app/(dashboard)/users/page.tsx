@@ -63,7 +63,7 @@ const Page = async () => {
           </Dialog>
         </div>
       </div>
-      <UsersList data={data} />
+      <UsersList data={data} userCount={data.length} />
     </div>
   );
 };

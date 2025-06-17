@@ -7,7 +7,9 @@ interface Props {
    params: Promise<{ id: string }>
 }
 
+
 async function getUserById(id: string): Promise<TUsers | null> {
+
   try {
     const res = await fetch(`${config.env.apiEndpoint}/api/users/${id}`, {
       cache: "no-cache",
