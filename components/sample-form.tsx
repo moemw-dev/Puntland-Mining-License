@@ -157,7 +157,7 @@ export default function SampleForm() {
               name="name"
               value={formData.name}
               onChange={handleChange}
-              className="mx-2 border-b border-black focus:outline-none w-[300px] px-1"
+              className="mx-2 border-b border-black focus:outline-none w-[200px] px-1"
               required
             />
             holding Passport No.

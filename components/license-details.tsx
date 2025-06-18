@@ -42,10 +42,11 @@ import { UpdateLicenseSignature } from "@/lib/actions/licenses.action";
 import { toast } from "sonner";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import { formatDate } from "@/lib/formatDate";
 
 export default function LicenseDetails({ license }: { license: License }) {
-  const [signature, setSignature] = useState(license.signature)
-  const [isPending, startTransition] = useTransition()
+  const [signature, setSignature] = useState(license.signature);
+  const [isPending, startTransition] = useTransition();
   const componentRef = useRef(null);
 
   const { data: session } = useSession();
@@ -96,7 +97,7 @@ export default function LicenseDetails({ license }: { license: License }) {
         });
 
         if (result?.data?.error) {
-          toast.error('Failed to update signature');
+          toast.error("Failed to update signature");
           // Revert the checkbox state on error
           setSignature(!newSignatureStatus);
         } else if (result?.data?.success) {
@@ -153,7 +154,7 @@ export default function LicenseDetails({ license }: { license: License }) {
         </div>
 
         {/* Main Content */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 capitalize">
           {/* Company Information */}
           <Card className="md:col-span-2">
             <CardContent className="p-6">
@@ -247,9 +248,14 @@ export default function LicenseDetails({ license }: { license: License }) {
                       }}
                     ></div>
                   </div>
+
                   <div className="flex items-center justify-between mt-2">
-                    <span className="text-xs text-gray-500">May 17, 2025</span>
-                    <span className="text-xs text-gray-500">Apr 9, 2025</span>
+                    <span className="text-xs text-gray-500">
+                      {formatDate(license.created_at, "PPPP")}
+                    </span>
+                    <span className="text-xs text-gray-500">
+                      {formatDate(license.expire_date, "PPPP")}
+                    </span>
                   </div>
                 </div>
                 <Dialog>
@@ -265,7 +271,7 @@ export default function LicenseDetails({ license }: { license: License }) {
                   <DialogContent className="min-w-fit overflow-y-auto bg-white dark:bg-gray-800">
                     <DialogHeader>
                       <DialogTitle>
-                        <div className="flex justify-between items-center">
+                        <div className="flex justify-between items-center capitalize">
                           <div>
                             {license.company_name} -{" "}
                             <span className="text-gray-500 text-sm">
@@ -277,7 +283,9 @@ export default function LicenseDetails({ license }: { license: License }) {
                           {session?.user?.role === "MINISTER" && (
                             <div className="flex items-center mr-16">
                               <div className="flex items-center space-x-2">
-                                <p className="text-sm text-gray-500">Signature</p>
+                                <p className="text-sm text-gray-500">
+                                  Signature
+                                </p>
                                 <div className="flex items-center space-x-1">
                                   {isPending && (
                                     <Loader2 className="h-3 w-3 animate-spin text-gray-500" />
@@ -288,9 +296,9 @@ export default function LicenseDetails({ license }: { license: License }) {
                                     checked={signature}
                                     disabled={isPending}
                                     onChange={(e) => {
-                                      const newValue = e.target.checked
-                                      setSignature(newValue) // Optimistic update
-                                      handleSignatureToggle(newValue)
+                                      const newValue = e.target.checked;
+                                      setSignature(newValue); // Optimistic update
+                                      handleSignatureToggle(newValue);
                                     }}
                                   />
                                 </div>
@@ -298,7 +306,6 @@ export default function LicenseDetails({ license }: { license: License }) {
                             </div>
                           )}
                           {/* Signature Toggle */}
-
                         </div>
                       </DialogTitle>
                     </DialogHeader>
@@ -355,9 +362,9 @@ export default function LicenseDetails({ license }: { license: License }) {
               <div className="space-y-3">
                 <div className="flex items-center">
                   <Phone className="h-4 w-4 text-gray-500 mr-3" />
-                  <p className="text-gray-700 dark:text-gray-200">
+                  <Link href={`tel:${license.mobile_number}`}>
                     {license.mobile_number}
-                  </p>
+                  </Link>
                 </div>
                 <div className="flex items-center">
                   <Mail className="h-4 w-4 text-gray-500 mr-3" />
@@ -409,7 +416,7 @@ export default function LicenseDetails({ license }: { license: License }) {
                     <div className="flex items-center">
                       <Calendar className="h-4 w-4 text-gray-500 mr-1" />
                       <p className="font-medium text-gray-900 dark:text-gray-200">
-                        {license.created_at}
+                        {formatDate(license.created_at)}
                       </p>
                     </div>
                   </div>
@@ -418,7 +425,7 @@ export default function LicenseDetails({ license }: { license: License }) {
                     <div className="flex items-center">
                       <Calendar className="h-4 w-4 text-gray-500 mr-1" />
                       <p className="font-medium text-gray-900 dark:text-gray-200">
-                        {license.expire_date}
+                        {formatDate(license.expire_date)}
                       </p>
                     </div>
                   </div>
@@ -530,7 +537,9 @@ export default function LicenseDetails({ license }: { license: License }) {
                       <div className="bg-red-50 rounded-md p-4 flex items-center justify-center h-20">
                         <FileTextIcon className="h-8 w-8 text-red-600" />
                       </div>
-                      <p className="text-sm text-gray-500 mt-2">Company Profile</p>
+                      <p className="text-sm text-gray-500 mt-2">
+                        Company Profile
+                      </p>
                     </div>
                     <div className="flex gap-2">
                       <Button
@@ -575,7 +584,9 @@ export default function LicenseDetails({ license }: { license: License }) {
                       <div className="bg-green-50 rounded-md p-4 flex items-center justify-center h-20">
                         <FileTextIcon className="h-8 w-8 text-green-600" />
                       </div>
-                      <p className="text-sm text-gray-500 mt-2">Payment Receipt</p>
+                      <p className="text-sm text-gray-500 mt-2">
+                        Payment Receipt
+                      </p>
                     </div>
                     <div className="flex gap-2">
                       <Button
@@ -620,7 +631,9 @@ export default function LicenseDetails({ license }: { license: License }) {
                       <div className="bg-yellow-50 rounded-md p-4 flex items-center justify-center h-20">
                         <FileTextIcon className="h-8 w-8 text-yellow-600" />
                       </div>
-                      <p className="text-sm text-gray-500 mt-2">Bank Statement</p>
+                      <p className="text-sm text-gray-500 mt-2">
+                        Bank Statement
+                      </p>
                     </div>
                     <div className="flex gap-2">
                       <Button
@@ -665,7 +678,9 @@ export default function LicenseDetails({ license }: { license: License }) {
                       <div className="bg-indigo-50 rounded-md p-4 flex items-center justify-center h-20">
                         <FileTextIcon className="h-8 w-8 text-indigo-600" />
                       </div>
-                      <p className="text-sm text-gray-500 mt-2">Company Profile</p>
+                      <p className="text-sm text-gray-500 mt-2">
+                        Company Profile
+                      </p>
                     </div>
                     <div className="flex gap-2">
                       <Button
@@ -710,7 +725,9 @@ export default function LicenseDetails({ license }: { license: License }) {
                       <div className="bg-pink-50 rounded-md p-4 flex items-center justify-center h-20">
                         <FileTextIcon className="h-8 w-8 text-pink-600" />
                       </div>
-                      <p className="text-sm text-gray-500 mt-2">Experience Profile</p>
+                      <p className="text-sm text-gray-500 mt-2">
+                        Experience Profile
+                      </p>
                     </div>
                     <div className="flex gap-2">
                       <Button
@@ -755,7 +772,9 @@ export default function LicenseDetails({ license }: { license: License }) {
                       <div className="bg-green-50 rounded-md p-4 flex items-center justify-center h-20">
                         <FileTextIcon className="h-8 w-8 text-green-600" />
                       </div>
-                      <p className="text-sm text-gray-500 mt-2">Risk Management Plan</p>
+                      <p className="text-sm text-gray-500 mt-2">
+                        Risk Management Plan
+                      </p>
                     </div>
                     <div className="flex gap-2">
                       <Button

@@ -117,7 +117,7 @@ export function DashboardHeader({ session }: { session: Session }) {
 
     // If no segments, we're on the home page
     if (segments.length === 0) {
-      return [{ label: "Mining Dashboard", href: "/" }]
+      return [{ label: "Dashboard", href: "/" }]
     }
 
     // Build breadcrumb items from path segments
@@ -131,7 +131,7 @@ export function DashboardHeader({ session }: { session: Session }) {
 
         return [...acc, { label, href }]
       },
-      [{ label: "Mining Dashboard", href: "/" }],
+      [{ label: "Dashboard", href: "/" }],
     )
   }
 

@@ -8,6 +8,8 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { ChevronDown, Search } from "lucide-react"
 import config from "@/lib/config/config"
 import Link from "next/link"
+import { formatDate } from "@/lib/utils"
+import { getStatusColorClass, getStatusDisplayText } from "@/types/license-schema"
 
 interface License {
   id: string
@@ -15,6 +17,7 @@ interface License {
   company_name: string
   mobile_number: string
   license_category: string
+  status: "PENDING" | "APPROVED" | "REVOKED"
   created_at: string
 }
 
@@ -110,18 +113,22 @@ export default function LicenseTable() {
                 <TableHead className="text-indigo-50 font-medium">Company</TableHead>
                 <TableHead className="text-indigo-50 font-medium">Phone Number</TableHead>
                 <TableHead className="text-indigo-50 font-medium">License Type</TableHead>
+                <TableHead className="text-indigo-50 font-medium">Status</TableHead>
                 <TableHead className="text-indigo-50 font-medium">Issue Date</TableHead>
                 <TableHead className="text-right text-indigo-50 font-medium rounded-r-md">Action</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {displayedLicenses.map((license) => (
-                <TableRow key={license.id}>
+                <TableRow key={license.id} className="capitalize">
                   <TableCell className="font-medium">{license.full_name}</TableCell>
                   <TableCell>{license.company_name}</TableCell>
                   <TableCell>{license.mobile_number}</TableCell>
                   <TableCell>{license.license_category}</TableCell>
-                  <TableCell>{new Date(license.created_at).toLocaleDateString()}</TableCell>
+                  <TableCell className={`py-4 rounded-full w-fit flex items-center p-0 px-2 my-4 ${getStatusColorClass(license.status)}`}>
+                    {getStatusDisplayText(license.status)}
+                  </TableCell>
+                  <TableCell>{formatDate(license.created_at)}</TableCell>
                   <TableCell className="text-right py-4">
                     <Link href={`/licenses/${license.id}`}
                       className="bg-emerald-100 text-emerald-700 hover:bg-emerald-200 hover:text-emerald-800 border-0 px-4 py-2 rounded-md my-2"

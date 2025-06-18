@@ -80,14 +80,14 @@ export default function MiningLicense({
         </div>
 
         {/* Description */}
-        <p className="mt-0 print:mt-2 text-center print:text-xl xlg:text-lg text-[13px] text-nowrap">
+        <p className="mt-0 print:mt-1 text-center print:text-xl xlg:text-lg text-[13px] text-nowrap">
           Wasaaradda Tamarta Macdanta iyo Biyaha waxay shatiga ganacsiga
           macdanta u oggolaatay <br />
           Ministry of Energy Minerals & Water has granted the mining license
         </p>
 
         {/* License Details */}
-        <div className="mt-3 print:mt-4 space-y-2 xlg:text-lg text-[13px] print:text-[20px] print:px-32 xlg:px-18 px-12  print:leading-7 xlg:leading-none leading-4">
+        <div className="mt-3 print:mt-4 capitalize space-y-2 xlg:text-lg text-[13px] print:text-[20px] print:px-32 xlg:px-18 px-12  print:leading-7 xlg:leading-none leading-4">
           <p>{licenseNumber}</p>
           <p>
             Shirkadda/Company:{" "}
@@ -116,7 +116,7 @@ export default function MiningLicense({
         {/* Official Seal */}
         <div className="flex items-center">
           <div className="absolute -bottom-2 left-0 right-0 print:left-18 print:bottom-14">
-            <div className="relative w-[60px] h-[60px] print:w-[100px] print:h-[100px]">
+            <div className="relative w-[80px] h-[80px] print:w-[100px] print:h-[100px]">
               <Image
                 src="/assets/moemw-logo.png"
                 alt="Official Seal"
@@ -129,7 +129,7 @@ export default function MiningLicense({
           {/* QR Code */}
           <div>
             {qrCodeUrl && (
-              <div className="absolute xlg:-bottom-12 bottom-6 right-7 print:bottom-1 print:right-4">
+              <div className="absolute xlg:-bottom-12 bottom-6 right-14 print:bottom-1 print:right-4">
                 <div className="relative print:w-[140px] print:h-[140px] w-[30px] h-[30px]">
                   <div className="border-2 border-blue-200 p-[3px] bg-white flex items-center justify-center w-fit">
                     {/* Dynamic QR code generation based on license reference ID */}
@@ -147,14 +147,14 @@ export default function MiningLicense({
           </div>
 
           {/* Footer */}
-          <div className="absolute print:bottom-0 -bottom-12 left-0 right-0 text-center">
+          <div className="absolute print:bottom-4 -bottom-4 left-0 right-0 text-center">
             <p className="font-medium leading-tight print:text-[20px] xlg:text-lg text-[13px] -mb-2">
               Wasiirka Wasaaradda Tamarta, Macdanta Biyaha <br />
               Ministry Of Energy Minerals and Water
             </p>
             <div className="flex justify-center">
               {signature ? (
-                <div className="relative print:bottom-4 w-[140px] h-[70px] print:w-[250px] print:h-[120px]">
+                <div className="relative print:bottom-4 w-[140px] h-[70px] print:w-[230px] print:h-[110px]">
                   <Image
                     src="/assets/signature.png"
                     alt="Signature"

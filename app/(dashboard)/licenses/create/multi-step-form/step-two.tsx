@@ -65,7 +65,7 @@ const StepTwo = ({ onNext, onBack, formData }: StepTwoProps) => {
                   <FormControl>
                     <div className="relative">
                       <Phone className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500" />
-                      <Input {...field} className="pl-10" placeholder="Enter your mobile number" type="tel" />
+                      <Input {...field} className="pl-10" placeholder="Enter your mobile number (E.g. +252)" type="tel" />
                     </div>
                   </FormControl>
                   <FormMessage />
