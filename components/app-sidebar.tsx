@@ -137,7 +137,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 
   // Custom active class for single items with smooth transitions
   const singleItemActiveClass =
-    "transition-all duration-300 ease-in-out data-[active=true]:bg-[#3730a3]  dark:hover:bg-[#3730a3]data-[active=true]:text-white hover:data-[active=true]:bg-[#3730a3] hover:data-[active=true]:text-white [&[data-active=true]>svg]:text-white [&:hover[data-active=true]>svg]:text-white hover:bg-gray-100 hover:scale-[1.02] data-[active=true]:shadow-md data-[active=true]:border-l-4 data-[active=true]:border-l-white"
+    "transition-all duration-300 ease-in-out data-[active=true]:bg-[#3730a3] dark:hover:bg-[#3730a3]data-[active=true]:text-white hover:data-[active=true]:bg-[#3730a3] hover:data-[active=true]:text-white [&[data-active=true]>svg]:text-white [&:hover[data-active=true]>svg]:text-white hover:bg-gray-100 hover:scale-[1.02] data-[active=true]:shadow-md data-[active=true]:border-l-4 data-[active=true]:border-l-white"
 
   // Icon animation class
   const iconAnimationClass = "transition-all duration-200 ease-in-out hover:scale-110"
@@ -198,7 +198,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                 ) : (
                   // Single item without children - keep active styling for these
                   <SidebarMenuButton asChild isActive={isActive(item.path)} className={singleItemActiveClass}>
-                    <Link href={item.path} className="transition-all duration-200 ease-in-out hover:scale-[1.01] dark:hover:bg-[#3730a3]">
+                    <Link href={item.path} className={`transition-all duration-200 ease-in-out hover:scale-[1.01] dark:hover:bg-[#3730a3 `}>
                       <item.icon className={`size-4 ${iconAnimationClass}`} />
                       <span>{item.title}</span>
                     </Link>

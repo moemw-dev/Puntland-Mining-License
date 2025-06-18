@@ -2,7 +2,7 @@
 
 import { usePathname } from "next/navigation"
 import Link from "next/link"
-import { ChevronRight, Bell, LogOut, User, Clock, AlertTriangle, Moon, Sun } from "lucide-react"
+import { ChevronRight, Bell, LogOut, User, Clock, AlertTriangle, Moon, Sun, Calendar } from "lucide-react"
 import { useEffect, useState } from "react"
 import { useTheme } from "next-themes"
 
@@ -25,6 +25,7 @@ import { ScrollArea } from "@/components/ui/scroll-area"
 import { handleSignOut } from "@/lib/actions/auth.action"
 import config from "@/lib/config/config"
 import type { Session } from "next-auth"
+import ClockHeader from "./clock"
 
 interface BreadcrumbItem {
   label: string
@@ -189,6 +190,10 @@ export function DashboardHeader({ session }: { session: Session }) {
 
         {/* Right Section - Actions & User */}
         <div className="ml-auto flex items-center gap-3">
+          <Button variant="outline">
+            <Calendar className="h-4 w-4 text-gray-500" />
+            <ClockHeader />
+          </Button>
           {/* Quick Actions */}
           <div className="flex items-center gap-1">
             {/* Theme Toggle */}
