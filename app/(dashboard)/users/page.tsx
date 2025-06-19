@@ -21,21 +21,43 @@ export type TUsers = {
   role: string
 }
 
-//fetch license data from api
 async function getUsers(): Promise<TUsers[]> {
-  const res = await fetch(`${config.env.apiEndpoint}/api/users`, {
-    method: 'GET',
-    credentials: 'include',
-    cache: 'no-cache'
-  })
-  const data = await res.json()
-  return data;
+  try {
+    const res = await fetch(`${config.env.apiEndpoint}/api/users`, {
+      method: 'GET',
+      cache: 'no-cache',
+      credentials: 'include', // ⬅️ muhiim
+    });
+
+    // If not OK, return empty array
+    if (!res.ok) {
+      console.error(`API Error: ${res.status}`);
+      return [];
+    }
+
+    const data = await res.json();
+
+    // Verify it's an array
+    if (!Array.isArray(data)) {
+      console.error("Unexpected response format:", data);
+      return [];
+    }
+
+    return data;
+  } catch (error) {
+    console.error("Failed to fetch users:", error);
+    return [];
+  }
 }
 
-const Page = async () => {
-  const data =  await getUsers()
 
-  if(!data) return <div>Loading...</div>
+const Page = async () => {
+   const data = await getUsers();
+
+  if (data.length === 0) {
+    return <div>No users found or unauthorized access.</div>;
+  }
+
   return (
     <div className="container mx-auto py-10">
       <div className="flex items-center justify-between">

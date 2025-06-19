@@ -1,29 +1,23 @@
 // app/api/categories/route.ts
 
+import { auth } from "@/auth";
 import { db } from "@/database/drizzle";
 import { users } from "@/database/schema";
 import { NextResponse } from "next/server";
 
 
 export async function GET() {
-  try {
-    const GetUsers = await db.select({
-        id: users.id,
-        name: users.name,
-        email: users.email,
-        role: users.role,
-        emailVerified: users.emailVerified,
-        image: users.image,
-        createdAt: users.createdAt,
-        updatedAt: users.updatedAt,
-        
+  const session = await auth();
 
-    }
-    ).from(users);
-
-    return NextResponse.json(GetUsers);
-  } catch (error) {
-    console.error("Error fetching categories:", error);
-    return NextResponse.json({ error: "Waa la waayay categories" }, { status: 500 });
+  if (!session || !session.user) {
+    return NextResponse.json([], { status: 200 }); // Si aan error u keenin front-end
   }
+
+  // if (session.user.role !== "SUPER_ADMIN") {
+  //   return NextResponse.json([], { status: 200 }); // Si aan map error u keenin
+  // }
+
+  const result = await db.select().from(users);
+  return NextResponse.json(result);
 }
+

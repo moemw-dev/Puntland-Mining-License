@@ -311,6 +311,7 @@ export default function LicenseDetails({ license }: { license: License }) {
                     </DialogHeader>
                     <div ref={componentRef}>
                       <MiningLicense
+                      license_category={license.license_category}
                         licenseNumber={license.license_ref_id}
                         companyName={license.company_name}
                         licenseType={license.business_type}

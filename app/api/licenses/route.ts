@@ -2,37 +2,31 @@ import { db } from "@/database/drizzle";
 import { districts, licenses } from "@/database/schema";
 import { eq } from "drizzle-orm";
 
+
+
 import { NextResponse } from "next/server";
 
 export async function GET(req: Request) {
-
-// const session = await auth();
-  // 1. Check if user is logged in
-  // if (!session) {
-  //   return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  // }
 
 
   const { searchParams } = new URL(req.url);
   const districtParam = searchParams.get("districts");
   try {
     const getLicenses = await db
-      .select(
-        {
-          license: licenses,
-          district: districts
-        }
-      )
+      .select({
+        license: licenses,
+        district: districts,
+      })
       .from(licenses)
       .leftJoin(districts, eq(licenses.district_id, districts.id))
-      .where(districtParam ? eq(licenses.district_id, districtParam) : undefined)
+      .where(
+        districtParam ? eq(licenses.district_id, districtParam) : undefined
+      );
 
     const transformed = getLicenses.map((item) => ({
       ...item.license,
       location: item.district, // category hoos keen
     }));
-
-
 
     return NextResponse.json(transformed);
   } catch (error) {
@@ -40,8 +34,3 @@ export async function GET(req: Request) {
     return NextResponse.json({ error: `Error ${error}` }, { status: 500 });
   }
 }
-
-
-
-
-

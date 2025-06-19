@@ -7,6 +7,7 @@ type LicenseProps = {
   licenseNumber: string;
   companyName: string;
   licenseType: string;
+  license_category:string
   miningArea: string;
   signature: boolean;
   issueDate: string;
@@ -17,7 +18,7 @@ type LicenseProps = {
 export default function MiningLicense({
   licenseNumber,
   companyName,
-  licenseType,
+  license_category,
   miningArea,
   signature,
   issueDate,
@@ -95,7 +96,7 @@ export default function MiningLicense({
           </p>
           <p>
             Nooca Shatiga/type of License:{" "}
-            <span className="font-semibold">{licenseType}</span>
+            <span className="font-semibold">{license_category}</span>
           </p>
           <p>
             Shirkaddu waxay ka shaqayn karta Degmada/Mining Area:{" "}
