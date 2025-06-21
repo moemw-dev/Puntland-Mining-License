@@ -1,6 +1,6 @@
-"use client"
+"use client";
 
-import type * as React from "react"
+import type * as React from "react";
 import {
   FileBadge,
   FileLineChartIcon as FileChartLine,
@@ -10,9 +10,9 @@ import {
   Plus,
   TestTube2,
   Users,
-} from "lucide-react"
-import { usePathname } from "next/navigation"
-import { useSession } from "next-auth/react"
+} from "lucide-react";
+import { usePathname } from "next/navigation";
+import { useSession } from "next-auth/react";
 
 import {
   Sidebar,
@@ -26,24 +26,24 @@ import {
   SidebarMenuSubButton,
   SidebarMenuSubItem,
   SidebarRail,
-} from "@/components/ui/sidebar"
-import Link from "next/link"
-import Image from "next/image"
+} from "@/components/ui/sidebar";
+import Link from "next/link";
+import Image from "next/image";
 
 // Define types for our navigation items
 type SubNavItem = {
-  title: string
-  path: string
-  icon: LucideIcon
-}
+  title: string;
+  path: string;
+  icon: LucideIcon;
+};
 
 type NavItem = {
-  title: string
-  path: string
-  icon: LucideIcon
-  children?: SubNavItem[]
-  roles?: string[] // Add roles field to restrict access
-}
+  title: string;
+  path: string;
+  icon: LucideIcon;
+  children?: SubNavItem[];
+  roles?: string[]; // Add roles field to restrict access
+};
 
 // Define the navigation structure
 const navigationItems: NavItem[] = [
@@ -90,7 +90,6 @@ const navigationItems: NavItem[] = [
     title: "Reports",
     path: "/reports",
     icon: FileChartLine,
-    
   },
   {
     title: "Users",
@@ -98,56 +97,70 @@ const navigationItems: NavItem[] = [
     icon: Users,
     // roles: ["SUPER_ADMIN"], // Only these roles can see Users menu
   },
-]
+];
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  const pathname = usePathname();
 
-  const pathname = usePathname()
-
-  const { data: session } = useSession()
-  const userRole = session?.user?.role
-
+  const { data: session } = useSession();
+  const userRole = session?.user?.role;
 
   const isActive = (path: string) => {
-    return pathname === path
-  }
-
+    return pathname === path;
+  };
 
   const isChildActive = (childPath: string) => {
-    return pathname === childPath
-  }
+    return pathname === childPath;
+  };
 
-  
   const hasAccess = (item: NavItem) => {
     // If no roles specified, everyone has access
     if (!item.roles || item.roles.length === 0) {
-      return true
+      return true;
     }
 
     // Check if user's role is in the allowed roles
-    return item.roles.includes(userRole || "")
-  }
+    return item.roles.includes(userRole || "");
+  };
 
   // Filter navigation items based on user role
-  const filteredNavigationItems = navigationItems.filter(hasAccess)
+  const filteredNavigationItems = navigationItems.filter(hasAccess);
 
   // Custom active class for child links with smooth transitions
   const childActiveClass =
-    "transition-all duration-300 ease-in-out data-[active=true]:bg-[#3730a3] dark:hover:bg-[#3730a3] data-[active=true]:text-white hover:data-[active=true]:bg-[#3730a3] hover:data-[active=true]:text-white [&[data-active=true]>svg]:text-white [&:hover[data-active=true]>svg]:text-white hover:bg-gray-100 hover:scale-[1.02] data-[active=true]:shadow-md data-[active=true]:border-l-4 data-[active=true]:border-l-white"
+    "transition-all duration-300 ease-in-out data-[active=true]:bg-[#3730a3] dark:hover:bg-[#3730a3] data-[active=true]:text-white hover:data-[active=true]:bg-[#3730a3] hover:data-[active=true]:text-white [&[data-active=true]>svg]:text-white [&:hover[data-active=true]>svg]:text-white hover:bg-gray-100 hover:scale-[1.02] data-[active=true]:shadow-md data-[active=true]:border-l-4 data-[active=true]:border-l-white";
 
   // Custom active class for single items with smooth transitions
-  const singleItemActiveClass =
-    "transition-all duration-300 ease-in-out data-[active=true]:bg-[#3730a3] dark:hover:bg-[#3730a3]data-[active=true]:text-white hover:data-[active=true]:bg-[#3730a3] hover:data-[active=true]:text-white [&[data-active=true]>svg]:text-white [&:hover[data-active=true]>svg]:text-white hover:bg-gray-100 hover:scale-[1.02] data-[active=true]:shadow-md data-[active=true]:border-l-4 data-[active=true]:border-l-white"
+  const singleItemActiveClass = `
+  transition-all duration-300 ease-in-out
+  data-[active=true]:bg-[#3730a3] 
+  data-[active=true]:text-white
+  hover:data-[active=true]:bg-[#3730a3] 
+  hover:data-[active=true]:text-white 
+  dark:hover:bg-[#3730a3] 
+  [&[data-active=true]>svg]:text-white 
+  [&:hover[data-active=true]>svg]:text-white 
+  hover:bg-gray-100 
+  hover:scale-[1.02] 
+  data-[active=true]:shadow-md 
+  data-[active=true]:border-l-4 
+  data-[active=true]:border-l-white
+  `;
 
   // Icon animation class
-  const iconAnimationClass = "transition-all duration-200 ease-in-out hover:scale-110"
+  const iconAnimationClass =
+    "transition-all duration-200 ease-in-out hover:scale-110";
 
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
         <SidebarMenu>
           <SidebarMenuItem>
-            <SidebarMenuButton size="lg" asChild className="transition-all duration-200 hover:scale-105">
+            <SidebarMenuButton
+              size="lg"
+              asChild
+              className="transition-all duration-200 hover:scale-105"
+            >
               <Link href="/">
                 <div className="flex aspect-square size-8 items-center justify-center rounded-lg text-sidebar-primary-foreground">
                   <Image
@@ -187,7 +200,9 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                             className={childActiveClass}
                           >
                             <Link href={child.path}>
-                              <child.icon className={`size-3.5 ${iconAnimationClass}`} />
+                              <child.icon
+                                className={`size-3.5 ${iconAnimationClass}`}
+                              />
                               {child.title}
                             </Link>
                           </SidebarMenuSubButton>
@@ -197,8 +212,15 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                   </>
                 ) : (
                   // Single item without children - keep active styling for these
-                  <SidebarMenuButton asChild isActive={isActive(item.path)} className={singleItemActiveClass}>
-                    <Link href={item.path} className={`transition-all duration-200 ease-in-out hover:scale-[1.01] dark:hover:bg-[#3730a3 `}>
+                  <SidebarMenuButton
+                    asChild
+                    isActive={isActive(item.path)}
+                    className={singleItemActiveClass}
+                  >
+                    <Link
+                      href={item.path}
+                      className="transition-all duration-200 ease-in-out hover:scale-[1.01] dark:hover:bg-[#3730a3]"
+                    >
                       <item.icon className={`size-4 ${iconAnimationClass}`} />
                       <span>{item.title}</span>
                     </Link>
@@ -211,5 +233,5 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       </SidebarContent>
       <SidebarRail />
     </Sidebar>
-  )
+  );
 }

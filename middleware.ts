@@ -50,5 +50,7 @@ export const config = {
     "/admin/:path*",
     "/reports/:path*",
     "/sample-analysis/:path*",
+
+    //api routes
   ],
 }
