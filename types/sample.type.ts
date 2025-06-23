@@ -9,8 +9,11 @@ export const deleteSampleSchema = z.object({
 export const updateSampleAnalysisSchema = z.object({
   id: z.string(),
   name: z.string().min(1, "Name is required"),
+  nationality: z.string().min(1, "Nationality is required"),
   passport_no: z.string().min(1, "Passport number is required"),
-  kilo_gram: z.string().min(1, "Kilogram amount is required"),
+  mineral_type: z.string().min(1, "Mineral type is required"),
+  unit: z.string().min(1, "Kilogram amount is required"),
+  amount: z.string().min(1, "Amount is required"),
 })
 
 // Shared base interface

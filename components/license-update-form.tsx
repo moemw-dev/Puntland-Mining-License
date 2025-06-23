@@ -1,85 +1,66 @@
-"use client";
+"use client"
 
-import { useEffect, useState } from "react";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import * as z from "zod";
-import { Loader2 } from "lucide-react";
-import { toast } from "sonner";
+import { useEffect, useState } from "react"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { useForm } from "react-hook-form"
+import * as z from "zod"
+import { Loader2 } from "lucide-react"
+import { toast } from "sonner"
 
-import { Button } from "@/components/ui/button";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { UpdateLicense } from "@/lib/actions/licenses.action";
-import PassportFileUpload from "./fileupload/passport-file";
-import CompanyProfile from "./fileupload/company-profile";
-import ReceiptOfPayment from "./fileupload/receipt-of-payment";
-import EnvironmentalAssessmentPlan from "./fileupload/environmental-assessment-plan";
-import ExperienceProfile from "./fileupload/experience-profile";
-import RiskManagementPlan from "./fileupload/risk-management-plan";
-import BankStatement from "./fileupload/bank-statement";
+import { Button } from "@/components/ui/button"
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
+import { Input } from "@/components/ui/input"
+import { Textarea } from "@/components/ui/textarea"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { UpdateLicense } from "@/lib/actions/licenses.action"
+import PassportFileUpload from "./fileupload/passport-file"
+import CompanyProfile from "./fileupload/company-profile"
+import ReceiptOfPayment from "./fileupload/receipt-of-payment"
+import EnvironmentalAssessmentPlan from "./fileupload/environmental-assessment-plan"
+import ExperienceProfile from "./fileupload/experience-profile"
+import RiskManagementPlan from "./fileupload/risk-management-plan"
+import BankStatement from "./fileupload/bank-statement"
+import AreaMultiSelect, { areas } from "./area-multi-select"
 
 type RegionDistrict = {
-  regionId: string;
-  regionName: string;
-  districtId: string;
-  districtName: string;
-};
+  regionId: string
+  regionName: string
+  districtId: string
+  districtName: string
+}
 
 // Define the License type
 export type License = {
-  id: string;
-  license_ref_id: string;
-  company_name: string;
-  business_type: string;
-  company_address: string;
-  region: string;
-  district_id: string;
-  country_of_origin: string;
-  full_name: string;
-  mobile_number: string;
-  email_address: string;
+  id: string
+  license_ref_id: string
+  company_name: string
+  business_type: string
+  company_address: string
+  region: string
+  district_id: string
+  country_of_origin: string
+  full_name: string
+  mobile_number: string
+  email_address: string
 
-  id_card_number: string;
-  passport_photos: string;
-  company_profile: string;
-  receipt_of_payment: string;
-  environmental_assessment_plan: string;
-  experience_profile: string;
-  risk_management_plan: string;
-  bank_statement: string;
+  id_card_number: string
+  passport_photos: string
+  company_profile: string
+  receipt_of_payment: string
+  environmental_assessment_plan: string
+  experience_profile: string
+  risk_management_plan: string
+  bank_statement: string
 
-  license_type: string;
-  license_category: string;
-  calculated_fee: string;
-  license_area: string;
-  created_at: string;
-  updated_at: string;
-};
+  license_type: string
+  license_category: string
+  calculated_fee: string
+  license_area: string[] | string // Support both for backward compatibility
+  created_at: string
+  updated_at: string
+}
 
 // Define the form schema with validation
 const formSchema = z.object({
@@ -111,29 +92,22 @@ const formSchema = z.object({
   // License Information
   license_type: z.string().min(1, "License type is required"),
   license_category: z.string().min(1, "License category is required"),
-  license_area: z.string().min(1, "License area is required"),
+  license_area: z.array(z.string()).min(1, "License area is required"),
   calculated_fee: z.string().min(1, "Calculated fee is required"),
-});
+})
 
 interface LicenseUpdateFormProps {
-  license: License;
-  onSuccess?: () => void;
+  license: License
+  onSuccess?: () => void
 }
 
-export function LicenseUpdateForm({
-  license,
-  onSuccess,
-}: LicenseUpdateFormProps) {
-  const [regions, setRegions] = useState<{ id: string; name: string }[]>([]);
-  const [districts, setDistricts] = useState<
-    { id: string; name: string; regionId: string }[]
-  >([]);
-  const [filteredDistricts, setFilteredDistricts] = useState<
-    { id: string; name: string; regionId: string }[]
-  >([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isDataLoaded, setIsDataLoaded] = useState(false);
+export function LicenseUpdateForm({ license, onSuccess }: LicenseUpdateFormProps) {
+  const [regions, setRegions] = useState<{ id: string; name: string }[]>([])
+  const [districts, setDistricts] = useState<{ id: string; name: string; regionId: string }[]>([])
+  const [filteredDistricts, setFilteredDistricts] = useState<{ id: string; name: string; regionId: string }[]>([])
+  const [isLoading, setIsLoading] = useState(true)
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [isDataLoaded, setIsDataLoaded] = useState(false)
 
   // Initialize the form with the license data
   const form = useForm<z.infer<typeof formSchema>>({
@@ -155,106 +129,93 @@ export function LicenseUpdateForm({
       receipt_of_payment: license.receipt_of_payment,
       license_type: license.license_type,
       license_category: license.license_category,
-      license_area: license.license_area,
+      license_area: Array.isArray(license.license_area)
+        ? license.license_area
+        : license.license_area
+          ? [license.license_area]
+          : [],
       calculated_fee: license.calculated_fee,
     },
-  });
+  })
 
   // Fetch regions and districts data
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch("/api/districts");
-        const data: RegionDistrict[] = await response.json();
+        const response = await fetch("/api/districts")
+        const data: RegionDistrict[] = await response.json()
 
         // Extract unique regions
         const uniqueRegions = Array.from(
-          new Map(
-            data.map((item) => [
-              item.regionId,
-              { id: item.regionId, name: item.regionName },
-            ])
-          ).values()
-        );
+          new Map(data.map((item) => [item.regionId, { id: item.regionId, name: item.regionName }])).values(),
+        )
 
         // Extract all districts with their region IDs
         const allDistricts = data.map((item) => ({
           id: item.districtId,
           name: item.districtName,
           regionId: item.regionId,
-        }));
+        }))
 
-        setRegions(uniqueRegions);
-        setDistricts(allDistricts);
+        setRegions(uniqueRegions)
+        setDistricts(allDistricts)
 
         // Set initial filtered districts based on current region
         if (license.region) {
-          const initialFiltered = allDistricts.filter(
-            (district) => district.regionId === license.region
-          );
-          setFilteredDistricts(initialFiltered);
+          const initialFiltered = allDistricts.filter((district) => district.regionId === license.region)
+          setFilteredDistricts(initialFiltered)
         }
 
-        setIsLoading(false);
-        setIsDataLoaded(true);
+        setIsLoading(false)
+        setIsDataLoaded(true)
       } catch (error) {
-        console.error("Failed to fetch regions and districts:", error);
-        setIsLoading(false);
+        console.error("Failed to fetch regions and districts:", error)
+        setIsLoading(false)
       }
-    };
+    }
 
-    fetchData();
-  }, [license.region]);
+    fetchData()
+  }, [license.region])
 
   // Watch for region changes to filter districts
-  const selectedRegion = form.watch("region");
+  const selectedRegion = form.watch("region")
 
   useEffect(() => {
     // Only run this effect after data is loaded to prevent clearing initial values
-    if (!isDataLoaded) return;
+    if (!isDataLoaded) return
 
     if (selectedRegion) {
-      const filtered = districts.filter(
-        (district) => district.regionId === selectedRegion
-      );
-      setFilteredDistricts(filtered);
+      const filtered = districts.filter((district) => district.regionId === selectedRegion)
+      setFilteredDistricts(filtered)
 
       // Only reset district selection if the current selection doesn't belong to the selected region
       // AND this is not the initial load (to preserve existing district values)
-      const currentDistrict = form.getValues("district_id");
+      const currentDistrict = form.getValues("district_id")
       if (currentDistrict) {
-        const districtBelongsToRegion = filtered.some(
-          (d) => d.id === currentDistrict
-        );
+        const districtBelongsToRegion = filtered.some((d) => d.id === currentDistrict)
 
         // Only clear if district doesn't belong to region AND we're not on initial load
         if (!districtBelongsToRegion && selectedRegion !== license.region) {
-          form.setValue("district_id", "", { shouldValidate: false });
-          form.clearErrors("district_id");
+          form.setValue("district_id", "", { shouldValidate: false })
+          form.clearErrors("district_id")
         }
       }
     } else {
-      setFilteredDistricts([]);
+      setFilteredDistricts([])
       // Only clear district if region is actually changed by user, not on initial load
       if (selectedRegion !== license.region) {
-        form.setValue("district_id", "", { shouldValidate: false });
-        form.clearErrors("district_id");
+        form.setValue("district_id", "", { shouldValidate: false })
+        form.clearErrors("district_id")
       }
     }
-  }, [selectedRegion, districts, form, isDataLoaded, license.region]);
+  }, [selectedRegion, districts, form, isDataLoaded, license.region])
 
-  const license_type = form.watch("license_type");
-  const license_category = form.watch("license_category");
+  const license_type = form.watch("license_type")
+  const license_category = form.watch("license_category")
 
   // License types and categories
-  const licenseTypes = ["New License", "Renewal"];
-  const businessTypes = [
-    "Mining",
-    "Construction",
-    "Manufacturing",
-    "Consulting",
-    "Other",
-  ];
+  const licenseTypes = ["New License", "Renewal"]
+  const businessTypes = ["Mining", "Construction", "Manufacturing", "Consulting", "Other"]
 
   const licenseCategories = {
     "New License": [
@@ -271,29 +232,29 @@ export function LicenseUpdateForm({
       "Mining Equipment Rental Permit",
       "Stone Crusher Permit",
     ],
-  };
+  }
 
   // Helper function to get categories for a license type
   const getCategoriesForType = (type: string) => {
-    return licenseCategories[type as keyof typeof licenseCategories] || [];
-  };
+    return licenseCategories[type as keyof typeof licenseCategories] || []
+  }
 
   // Reset category when license type changes, but preserve valid existing categories
   useEffect(() => {
     if (license_type) {
-      const availableCategories = getCategoriesForType(license_type);
-      const currentCategory = form.getValues("license_category");
+      const availableCategories = getCategoriesForType(license_type)
+      const currentCategory = form.getValues("license_category")
 
       // Only reset if current category is not available for the selected license type
       // and if this is actually a user-initiated change (not initial load)
       if (currentCategory && !availableCategories.includes(currentCategory)) {
         // Only reset if the license type has actually changed from the original
         if (license_type !== license.license_type) {
-          form.setValue("license_category", "", { shouldValidate: true });
+          form.setValue("license_category", "", { shouldValidate: true })
         }
       }
     }
-  }, [license_type, form, license.license_type]);
+  }, [license_type, form, license.license_type])
 
   // Fee structure
   const fees = {
@@ -311,7 +272,7 @@ export function LicenseUpdateForm({
       "Mining Equipment Rental": "500",
       "Stone Crusher": "400",
     },
-  };
+  }
 
   // Calculate fee based on selections
   useEffect(() => {
@@ -327,62 +288,43 @@ export function LicenseUpdateForm({
               ? "Mining Equipment Rental"
               : license_category.includes("Stone")
                 ? "Stone Crusher"
-                : "";
+                : ""
 
-      const fee =
-        fees[license_type as keyof typeof fees]?.[
-          categoryKey as keyof (typeof fees)["New License"]
-        ] || "";
+      const fee = fees[license_type as keyof typeof fees]?.[categoryKey as keyof (typeof fees)["New License"]] || ""
 
       if (fee && form.getValues("calculated_fee") !== fee) {
-        form.setValue("calculated_fee", fee, { shouldValidate: true });
+        form.setValue("calculated_fee", fee, { shouldValidate: true })
       }
     }
-  }, [license_type, license_category, form]);
-
-  // Mining area
-  const miningArea = [
-    "All Puntland Areas",
-    "Bari",
-    "Cayn",
-    "Haylaan",
-    "Karkaar",
-    "Mudug",
-    "Nugaal",
-    "Raas Casayr",
-    "Sanaag",
-    "Sool",
-  ];
+  }, [license_type, license_category, form])
 
   // Handle form submission
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    setIsSubmitting(true);
+    setIsSubmitting(true)
 
     try {
       const formattedValues = {
         ...values,
-      };
+      }
 
-      console.log("Submitting form with values:", formattedValues);
+      console.log("Submitting form with values:", formattedValues)
 
-      const result = await UpdateLicense(formattedValues);
-      console.log("Update result:", result);
+      const result = await UpdateLicense(formattedValues)
+      console.log("Update result:", result)
 
       if (result?.validationErrors) {
-        toast.error("Validation error");
+        toast.error("Validation error")
       } else {
-        toast.success("License updated successfully");
+        toast.success("License updated successfully")
         if (onSuccess) {
-          onSuccess();
+          onSuccess()
         }
       }
     } catch (error) {
-      console.error("Error in form submission:", error);
-      toast.error(
-        `An unexpected error occurred: ${error instanceof Error ? error.message : String(error)}`
-      );
+      console.error("Error in form submission:", error)
+      toast.error(`An unexpected error occurred: ${error instanceof Error ? error.message : String(error)}`)
     } finally {
-      setIsSubmitting(false);
+      setIsSubmitting(false)
     }
   }
 
@@ -392,9 +334,7 @@ export function LicenseUpdateForm({
         <Card>
           <CardHeader>
             <CardTitle>Update License</CardTitle>
-            <CardDescription>
-              Update the license information for {license.company_name}
-            </CardDescription>
+            <CardDescription>Update the license information for {license.company_name}</CardDescription>
           </CardHeader>
           <CardContent>
             <Tabs defaultValue="company" className="w-full">
@@ -428,10 +368,7 @@ export function LicenseUpdateForm({
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>Business Type</FormLabel>
-                        <Select
-                          onValueChange={field.onChange}
-                          value={field.value}
-                        >
+                        <Select onValueChange={field.onChange} value={field.value}>
                           <FormControl className="w-full">
                             <SelectTrigger>
                               <SelectValue placeholder="Select business type" />
@@ -458,11 +395,7 @@ export function LicenseUpdateForm({
                     <FormItem>
                       <FormLabel>Company Address</FormLabel>
                       <FormControl>
-                        <Textarea
-                          placeholder="Enter company address"
-                          className="resize-none"
-                          {...field}
-                        />
+                        <Textarea placeholder="Enter company address" className="resize-none" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -476,20 +409,10 @@ export function LicenseUpdateForm({
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>Region</FormLabel>
-                        <Select
-                          onValueChange={field.onChange}
-                          value={field.value}
-                          disabled={isLoading}
-                        >
+                        <Select onValueChange={field.onChange} value={field.value} disabled={isLoading}>
                           <FormControl className="w-full">
                             <SelectTrigger>
-                              <SelectValue
-                                placeholder={
-                                  isLoading
-                                    ? "Loading regions..."
-                                    : "Select region"
-                                }
-                              />
+                              <SelectValue placeholder={isLoading ? "Loading regions..." : "Select region"} />
                             </SelectTrigger>
                           </FormControl>
                           <SelectContent>
@@ -514,11 +437,7 @@ export function LicenseUpdateForm({
                         <Select
                           onValueChange={field.onChange}
                           value={field.value}
-                          disabled={
-                            isLoading ||
-                            !selectedRegion ||
-                            filteredDistricts.length === 0
-                          }
+                          disabled={isLoading || !selectedRegion || filteredDistricts.length === 0}
                         >
                           <FormControl className="w-full">
                             <SelectTrigger>
@@ -556,10 +475,7 @@ export function LicenseUpdateForm({
                     <FormItem>
                       <FormLabel>Country of Origin</FormLabel>
                       <FormControl>
-                        <Input
-                          placeholder="Enter country of origin"
-                          {...field}
-                        />
+                        <Input placeholder="Enter country of origin" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -675,13 +591,9 @@ export function LicenseUpdateForm({
                     name="environmental_assessment_plan"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel className="text-base font-medium">
-                          Environmental Assessment Plan
-                        </FormLabel>
+                        <FormLabel className="text-base font-medium">Environmental Assessment Plan</FormLabel>
                         <FormControl>
-                          <EnvironmentalAssessmentPlan
-                            onFilesChange={field.onChange}
-                          />
+                          <EnvironmentalAssessmentPlan onFilesChange={field.onChange} />
                         </FormControl>
                       </FormItem>
                     )}
@@ -691,9 +603,7 @@ export function LicenseUpdateForm({
                     name="experience_profile"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel className="text-base font-medium">
-                          Experience Profile
-                        </FormLabel>
+                        <FormLabel className="text-base font-medium">Experience Profile</FormLabel>
                         <FormControl>
                           <ExperienceProfile onFilesChange={field.onChange} />
                         </FormControl>
@@ -705,9 +615,7 @@ export function LicenseUpdateForm({
                     name="risk_management_plan"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel className="text-base font-medium">
-                          Risk Management Plan
-                        </FormLabel>
+                        <FormLabel className="text-base font-medium">Risk Management Plan</FormLabel>
                         <FormControl>
                           <RiskManagementPlan onFilesChange={field.onChange} />
                         </FormControl>
@@ -719,9 +627,7 @@ export function LicenseUpdateForm({
                     name="bank_statement"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel className="text-base font-medium">
-                          Bank Statement
-                        </FormLabel>
+                        <FormLabel className="text-base font-medium">Bank Statement</FormLabel>
                         <FormControl>
                           <BankStatement onFilesChange={field.onChange} />
                         </FormControl>
@@ -740,10 +646,7 @@ export function LicenseUpdateForm({
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>License Type</FormLabel>
-                        <Select
-                          onValueChange={field.onChange}
-                          value={field.value}
-                        >
+                        <Select onValueChange={field.onChange} value={field.value}>
                           <FormControl className="w-full">
                             <SelectTrigger>
                               <SelectValue placeholder="Select license type" />
@@ -768,10 +671,7 @@ export function LicenseUpdateForm({
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>License Category</FormLabel>
-                        <Select
-                          onValueChange={field.onChange}
-                          value={field.value}
-                        >
+                        <Select onValueChange={field.onChange} value={field.value}>
                           <FormControl className="w-full">
                             <SelectTrigger>
                               <SelectValue placeholder="Select license category" />
@@ -779,13 +679,11 @@ export function LicenseUpdateForm({
                           </FormControl>
                           <SelectContent>
                             {license_type &&
-                              getCategoriesForType(license_type).map(
-                                (category) => (
-                                  <SelectItem key={category} value={category}>
-                                    {category}
-                                  </SelectItem>
-                                )
-                              )}
+                              getCategoriesForType(license_type).map((category) => (
+                                <SelectItem key={category} value={category}>
+                                  {category}
+                                </SelectItem>
+                              ))}
                           </SelectContent>
                         </Select>
                         <FormMessage />
@@ -801,21 +699,7 @@ export function LicenseUpdateForm({
                     <FormItem>
                       <FormLabel>Mining Area</FormLabel>
                       <FormControl>
-                        <Select
-                          value={field.value}
-                          onValueChange={field.onChange}
-                        >
-                          <SelectTrigger className="w-full">
-                            <SelectValue placeholder="Select mining area" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            {miningArea.map((area, index) => (
-                              <SelectItem key={index} value={area}>
-                                {area}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
+                        <AreaMultiSelect value={field.value} onChange={field.onChange} options={areas} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -844,11 +728,7 @@ export function LicenseUpdateForm({
             </Tabs>
           </CardContent>
           <CardFooter className="flex justify-between">
-            <Button
-              variant="outline"
-              type="button"
-              onClick={() => form.reset()}
-            >
+            <Button variant="outline" type="button" onClick={() => form.reset()}>
               Reset
             </Button>
             <Button type="submit" disabled={isSubmitting}>
@@ -865,5 +745,5 @@ export function LicenseUpdateForm({
         </Card>
       </form>
     </Form>
-  );
+  )
 }

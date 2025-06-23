@@ -1,83 +1,140 @@
-"use client";
+"use client"
 
-import type React from "react";
+import type React from "react"
 
-import { useEffect, useState } from "react";
-import Image from "next/image";
-import { RegisterSampleAnalysis } from "@/lib/actions/sample.action";
-import { toast } from "sonner";
-import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react"
+import Image from "next/image"
+import { RegisterSampleAnalysis } from "@/lib/actions/sample.action"
+import { toast } from "sonner"
+import { useRouter } from "next/navigation"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import CountrySelector from "./country-selector"
 
 export default function SampleForm() {
   const [formData, setFormData] = useState({
     name: "",
     passportNo: "",
-    kilo_gram: "",
-  });
+    nationality: "",
+    mineralType: "",
+    unit: "kilogram", // default unit
+    amount: "",
+  })
 
-  const router = useRouter();
-
-  const [refNumber, setRefNumber] = useState("");
+  const router = useRouter()
+  const [refNumber, setRefNumber] = useState("")
 
   useEffect(() => {
     async function fetchRefId() {
       try {
-        const res = await fetch("/api/ref-id");
-        if (!res.ok) throw new Error("Failed to fetch ref ID");
-        const data = await res.json();
-        setRefNumber(data.refId);
+        const res = await fetch("/api/ref-id")
+        if (!res.ok) throw new Error("Failed to fetch ref ID")
+        const data = await res.json()
+        setRefNumber(data.refId)
       } catch (error) {
-        console.error(error);
+        console.error(error)
       }
     }
-    fetchRefId();
-  }, []);
+    fetchRefId()
+  }, [])
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-  };
+    const { name, value } = e.target
+    setFormData((prev) => ({ ...prev, [name]: value }))
+  }
+
+  const handleNationalityChange = (value: string) => {
+    setFormData((prev) => ({ ...prev, nationality: value }))
+  }
+
+  const handleUnitChange = (value: string) => {
+    setFormData((prev) => ({ ...prev, unit: value }))
+  }
+
+  // Convert amount to kilograms for database storage
+  const convertToKilograms = (amount: string, unit: string): number => {
+    const numAmount = Number.parseFloat(amount)
+    if (isNaN(numAmount)) return 0
+
+    switch (unit) {
+      case "milligram":
+        return numAmount / 1000000 // mg to kg
+      case "gram":
+        return numAmount / 1000 // g to kg
+      case "kilogram":
+        return numAmount // kg to kg
+      case "ton":
+        return numAmount * 1000 // ton to kg
+      default:
+        return numAmount
+    }
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+    e.preventDefault()
+
+    // Validate required fields
+    if (
+      !formData.name ||
+      !formData.nationality ||
+      !formData.passportNo ||
+      !formData.amount ||
+      !formData.unit ||
+      !formData.mineralType
+    ) {
+      toast.error("Please fill in all required fields.")
+      return
+    }
+
+    // Validate amount is a positive number
+    const numAmount = Number.parseFloat(formData.amount)
+    if (isNaN(numAmount) || numAmount <= 0) {
+      toast.error("Please enter a valid amount.")
+      return
+    }
 
     try {
+      const kiloGramAmount = convertToKilograms(formData.amount, formData.unit)
+
       const result = await RegisterSampleAnalysis({
         ref_id: refNumber,
         name: formData.name,
         passport_no: formData.passportNo,
-        kilo_gram: formData.kilo_gram,
-      });
+        amount: formData.amount, // Original amount as entered
+        kilo_gram: kiloGramAmount.toString(), // Converted to kg for standardization
+        unit: formData.unit,
+        mineral_type: formData.mineralType,
+        nationality: formData.nationality,
+      })
 
       if (result) {
-        toast.success("Sample registered successfully.");
-        router.push("/sample-analysis");
+        toast.success("Sample registered successfully.")
+        router.push("/sample-analysis")
       } else {
-        toast.error("Something went wrong.");
+        toast.error("Something went wrong.")
       }
     } catch (error) {
-      console.error("Submission error:", error);
-      toast.error("Failed to register sample.");
+      console.error("Submission error:", error)
+      toast.error("Failed to register sample.")
     }
-  };
+  }
 
-  const today = new Date();
-  const day = today.getDate();
-  const month = today.toLocaleString("default", { month: "long" });
-  const year = today.getFullYear();
-
-  const formattedDate = `${day}${getDaySuffix(day)} ${month}, ${year}`;
+  const today = new Date()
+  const day = today.getDate()
+  const month = today.toLocaleString("default", { month: "long" })
+  const year = today.getFullYear()
+  const formattedDate = `${day}${getDaySuffix(day)} ${month}, ${year}`
 
   function getDaySuffix(day: number) {
-    if (day > 3 && day < 21) return "th";
+    if (day > 3 && day < 21) return "th"
     switch (day % 10) {
       case 1:
-        return "st";
+        return "st"
       case 2:
-        return "nd";
+        return "nd"
       case 3:
-        return "rd";
+        return "rd"
       default:
-        return "th";
+        return "th"
     }
   }
 
@@ -119,9 +176,7 @@ export default function SampleForm() {
             </div>
             <p className="text-center font-bold">Puntland States of Somalia</p>
             <p className="text-center">Ministry of Energy Minerals & Water</p>
-            <p className="text-center text-sm">
-              OFFICE OF THE DIRECTOR GENERAL
-            </p>
+            <p className="text-center text-sm">OFFICE OF THE DIRECTOR GENERAL</p>
           </div>
 
           <div className="text-right text-sm" dir="rtl">
@@ -145,48 +200,78 @@ export default function SampleForm() {
         </div>
 
         <div className="mt-8">
-          <p className="font-bold underline mb-4">
-            Subject: Authorization of Sample Analysis
-          </p>
+          <p className="font-bold underline mb-4">Subject: Authorization of Sample Analysis</p>
 
-          <p className="mb-6 text-justify">
-            Ministry of Energy, Minerals and Water (MOEMW) of Puntland hereby
-            authorize Mr/Ms.
+          {/* Dynamic Form Inputs */}
+          <p className="mb-6 text-justify leading-relaxed">
+            Ministry of Energy, Minerals and Water (MOEMW) of Puntland hereby authorizes Mr./Ms.{" "}
             <input
               type="text"
               name="name"
               value={formData.name}
               onChange={handleChange}
-              className="mx-2 border-b border-black focus:outline-none w-[200px] px-1"
+              className="mx-1 border-b border-black focus:outline-none w-[200px] px-1 bg-transparent"
+              placeholder="Full Name"
               required
-            />
-            holding Passport No.
+            />{" "}
+            a citizen of{" "}
+            <span className="inline-block">
+              <CountrySelector
+                value={formData.nationality}
+                onChange={handleNationalityChange}
+                placeholder="Select Country"
+              />
+            </span>{" "}
+            holding Passport No.{" "}
             <input
               type="text"
               name="passportNo"
               value={formData.passportNo}
               onChange={handleChange}
-              className="mx-2 border-b border-black focus:outline-none w-[200px] px-1"
+              className="mx-1 border-b border-black focus:outline-none w-[150px] px-1 bg-transparent"
+              placeholder="Passport Number"
               required
-            />
-            , to take,
+            />{" "}
+            to take{" "}
+            <input
+              type="number"
+              name="amount"
+              value={formData.amount}
+              onChange={handleChange}
+              className="mx-1 border-b border-black focus:outline-none w-[80px] px-1 text-center bg-transparent"
+              placeholder="Amount"
+              min="0"
+              step="0.001"
+              required
+            />{" "}
+            <span className="inline-block">
+              <Select value={formData.unit} onValueChange={handleUnitChange}>
+                <SelectTrigger className="w-[120px] mx-1 inline-flex border-0 border-b border-black rounded-none px-1 h-auto py-0 font-normal hover:bg-transparent focus:bg-transparent">
+                  <SelectValue placeholder="Unit" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="milligram">Milligram</SelectItem>
+                  <SelectItem value="gram">Gram</SelectItem>
+                  <SelectItem value="kilogram">Kilogram</SelectItem>
+                  <SelectItem value="ton">Metric Ton</SelectItem>
+                </SelectContent>
+              </Select>
+            </span>{" "}
+            of{" "}
             <input
               type="text"
-              name="kilo_gram"
-              value={formData.kilo_gram}
+              name="mineralType"
+              value={formData.mineralType}
               onChange={handleChange}
-              className="mx-2 border-b border-black focus:outline-none w-[80px] px-1 text-center"
+              className="mx-1 border-b border-black focus:outline-none w-[150px] px-1 bg-transparent"
+              placeholder="Mineral Type"
               required
-            />
-            KILOGRAM of soil and rocks samples of minerals from Puntland State
-            of Somalia, for testing, and analysis purposes. These minerals have
-            zero value.
+            />{" "}
+            samples of minerals from Puntland State of Somalia for testing and analysis purposes. These minerals have
+            zero commercial value.
           </p>
 
-          <p className="mb-12">
-            This authorization shall be valid for one month from the date of
-            issue.
-          </p>
+          <p className="mb-12">This authorization shall be valid for one month from the date of issue.</p>
         </div>
 
         <div className="text-center mb-12">
@@ -194,18 +279,15 @@ export default function SampleForm() {
         </div>
 
         {/* Signature */}
-        <div className="mt-8">
+        <div className="mt-8 text-center">
           <p className="font-bold">Eng. Ismail Mohamed Hassan</p>
-          <p className="mt-1">
-            Director General of the Ministry of Energy, Minerals & Water
-          </p>
+          <p className="mt-1">Director General of the Ministry of Energy, Minerals & Water</p>
         </div>
 
         {/* Footer */}
         <div className="mt-8 text-center text-sm border-t pt-2">
           <p>
-            <span className="font-bold">Tel:</span> +252 907 993813,+252
-            661711119
+            <span className="font-bold">Tel:</span> +252 907 993813, +252 661711119
             <span className="font-bold mx-2">Office Email:</span>
             <span className="text-blue-600 underline">dg.moemw@plstate.so</span>
             <span className="font-bold mx-2">Website:</span>
@@ -213,13 +295,16 @@ export default function SampleForm() {
           </p>
         </div>
 
-        {/* Print Button - Hidden when printing */}
+        {/* Submit Button */}
         <div className="mt-8 text-center print:hidden">
-          <button className="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700">
-            Save
+          <button
+            type="submit"
+            className="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700 transition-colors"
+          >
+            Save Sample Analysis
           </button>
         </div>
       </form>
     </div>
-  );
+  )
 }

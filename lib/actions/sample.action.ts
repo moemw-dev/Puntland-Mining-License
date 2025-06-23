@@ -18,7 +18,7 @@ export const RegisterSampleAnalysis = actionClient
   .schema(sampleAnalysisSchema)
   .action(
     async ({
-      parsedInput: { name, passport_no, kilo_gram },
+      parsedInput: { name, passport_no, nationality, mineral_type, unit, amount },
     }) => {
         // Get the user's session
           const session = await auth();
@@ -55,7 +55,11 @@ export const RegisterSampleAnalysis = actionClient
         ref_id,
         name,
         passport_no,
-        kilo_gram,
+        nationality,
+        mineral_type,
+        unit,
+        amount,
+        
       });
 
       return { success: "Sample registered successfully" };

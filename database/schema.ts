@@ -18,14 +18,14 @@ export const roleEnum = pgEnum("role", [
   "MINISTER",
   "GENERAL_DIRECTOR",
   "DIRECTOR",
-  "OFFICER"
+  "OFFICER",
 ]);
 
 // 👉 License Status Enum
 export const licenseStatusEnum = pgEnum("license_status", [
   "PENDING",
   "APPROVED",
-  "REVOKED"
+  "REVOKED",
 ]);
 
 // 👉 Users Table
@@ -47,7 +47,7 @@ export const passwordResetTokens = pgTable("password_reset_tokens", {
   token: text("token").notNull().unique(),
   expires: timestamp("expires", { mode: "date" }).notNull(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
-})
+});
 
 // 👉 Regions Table
 export const regions = pgTable("regions", {
@@ -60,7 +60,9 @@ export const regions = pgTable("regions", {
 export const districts = pgTable("districts", {
   id: uuid("id").notNull().primaryKey().defaultRandom().unique(),
   name: varchar("name", { length: 255 }).notNull(),
-  region_id: uuid("region_id").notNull().references(() => regions.id),
+  region_id: uuid("region_id")
+    .notNull()
+    .references(() => regions.id),
   created_at: timestamp("created_at", { withTimezone: true }).defaultNow(),
 });
 
@@ -74,7 +76,9 @@ export const licenses = pgTable("licenses", {
   business_type: varchar("business_type", { length: 255 }).notNull(),
   company_address: text("company_address"),
   region: varchar("region", { length: 255 }),
-  district_id: uuid("district_id").notNull().references(() => districts.id),
+  district_id: uuid("district_id")
+    .notNull()
+    .references(() => districts.id),
   country_of_origin: varchar("country_of_origin", { length: 255 }),
 
   // 👉 License Status
@@ -97,14 +101,12 @@ export const licenses = pgTable("licenses", {
   risk_management_plan: text("risk_management_plan"),
   bank_statement: text("bank_statement"),
 
-
   // 👉 STEP 4 - License Info
   license_type: varchar("license_type", { length: 255 }),
   license_category: varchar("license_category", { length: 255 }),
   calculated_fee: decimal("calculated_fee", { precision: 10, scale: 2 }),
-  license_area: text("license_area"),
+  license_area: text("license_area").array(),
 
-  
   // 👉 STEP 5 - Signature true/false
   signature: boolean("signature").default(false),
 
@@ -121,14 +123,18 @@ export const licenses = pgTable("licenses", {
 export const sampleAnalysis = pgTable("sample_analysis", {
   id: uuid("id").notNull().primaryKey().defaultRandom().unique(),
   ref_id: varchar("license_ref_id", { length: 255 }).notNull(),
+  
   name: varchar("name", { length: 255 }).notNull(),
+  nationality: varchar("nationality", { length: 255 }).notNull(),
   passport_no: varchar("passport_no", { length: 255 }).notNull(),
+  amount: decimal("amount", { precision: 10, scale: 2 }).notNull(),
   kilo_gram: decimal("kilo_gram", { precision: 10, scale: 2 }).notNull(),
+  mineral_type: varchar("mineral_type", { length: 255 }).notNull(),
+
   signature: boolean("signature").default(false),
   created_at: timestamp("created_at", { withTimezone: true }).defaultNow(),
   updated_at: timestamp("updated_at", { withTimezone: true }).defaultNow(),
 });
-
 
 // 👉 Relations for Drizzle ORM (optional, for easier querying)
 export const districtRelations = relations(districts, ({ one, many }) => ({
@@ -145,4 +151,3 @@ export const licenseRelations = relations(licenses, ({ one }) => ({
     references: [districts.id],
   }),
 }));
-

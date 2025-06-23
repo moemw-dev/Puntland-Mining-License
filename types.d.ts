@@ -101,7 +101,7 @@ export interface License {
   license_type: string
   license_category: string
   calculated_fee: string
-  license_area: string
+  license_area: string[]
   created_at: string
   updated_at: string
   expire_date: string

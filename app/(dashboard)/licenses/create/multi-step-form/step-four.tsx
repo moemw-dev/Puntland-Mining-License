@@ -1,42 +1,30 @@
-"use client";
+"use client"
 
-import { useCallback, useEffect, useMemo } from "react";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-  FormDescription,
-} from "@/components/ui/form";
-import { Button } from "@/components/ui/button";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Label } from "@/components/ui/label";
+import { useCallback, useEffect, useMemo } from "react"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { useForm } from "react-hook-form"
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
+import { Button } from "@/components/ui/button"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Label } from "@/components/ui/label"
 
-import { z } from "zod";
+import { z } from "zod"
+import AreaMultiSelect, { areas } from "@/components/area-multi-select"
 
 // Define the schema directly in this file using your schema format
 const licenseInfoSchema = z.object({
   license_type: z.string().min(1, "License type is required"),
   license_category: z.string().min(1, "License category is required"),
   license_fee: z.string().min(1, "License fee is required"),
-  license_area: z.string().min(1, "License area is required"),
-});
+  license_area: z.array(z.string()).min(1, "License area is required"),
+  
+})
 
 interface StepFourProps {
-  onNext: (data: z.infer<typeof licenseInfoSchema>) => void;
-  onBack: () => void;
-  formData: z.infer<typeof licenseInfoSchema>;
+  onNext: (data: z.infer<typeof licenseInfoSchema>) => void
+  onBack: () => void
+  formData: z.infer<typeof licenseInfoSchema>
 }
 
 const StepFour = ({ onNext, onBack, formData }: StepFourProps) => {
@@ -46,23 +34,23 @@ const StepFour = ({ onNext, onBack, formData }: StepFourProps) => {
       license_type: formData.license_type || "",
       license_category: formData.license_category || "",
       license_fee: formData.license_fee || "",
-      license_area: formData.license_area || "",
+      license_area: formData.license_area || [],
     },
-  });
+  })
 
   const {
     formState: {},
     setValue,
     watch,
-  } = form;
+  } = form
 
-  const license_type = watch("license_type");
-  const license_category = watch("license_category");
-  const license_fee = watch("license_fee");
-  const license_area = watch("license_area");
+  const license_type = watch("license_type")
+  const license_category = watch("license_category")
+  const license_fee = watch("license_fee")
+  const license_area = watch("license_area")
 
   // License types and categories
-  const licenseTypes = ["New License", "Renewal"];
+  const licenseTypes = ["New License", "Renewal"]
 
   // Memoize licenseCategories so it doesn't change every render
   const licenseCategories = useMemo(
@@ -82,39 +70,27 @@ const StepFour = ({ onNext, onBack, formData }: StepFourProps) => {
         "Stone Crusher",
       ],
     }),
-    []
-  );
+    [],
+  )
 
   const getCategoriesForType = useCallback(
     (type: string): string[] => {
-      return licenseCategories[type as keyof typeof licenseCategories] || [];
+      return licenseCategories[type as keyof typeof licenseCategories] || []
     },
-    [licenseCategories]
-  );
+    [licenseCategories],
+  )
 
-  // Region and district data for license area options
-  const miningArea = [
-    "All Puntland Areas",
-    "Bari",
-    "Cayn",
-    "Haylaan",
-    "Karkaar",
-    "Mudug",
-    "Nugaal",
-    "Raas Casayr",
-    "Sanaag",
-    "Sool",
-  ];
+
 
   // Reset category when license type changes
   useEffect(() => {
     if (license_type && license_category) {
-      const availableCategories = getCategoriesForType(license_type);
+      const availableCategories = getCategoriesForType(license_type)
       if (!availableCategories.includes(license_category)) {
-        setValue("license_category", "", { shouldValidate: true });
+        setValue("license_category", "", { shouldValidate: true })
       }
     }
-  }, [license_type, license_category, setValue, getCategoriesForType]);
+  }, [license_type, license_category, setValue, getCategoriesForType])
 
   const fees = useMemo(
     () => ({
@@ -133,27 +109,25 @@ const StepFour = ({ onNext, onBack, formData }: StepFourProps) => {
         "Stone Crusher": "400",
       },
     }),
-    []
-  );
+    [],
+  )
 
   // Calculate fee based on selections
   useEffect(() => {
     if (license_type && license_category) {
       const fee =
-        fees[license_type as keyof typeof fees]?.[
-          license_category as keyof (typeof fees)["New License"]
-        ] || "";
+        fees[license_type as keyof typeof fees]?.[license_category as keyof (typeof fees)["New License"]] || ""
 
       // Only update if the fee has actually changed
       if (license_fee !== fee) {
-        setValue("license_fee", fee, { shouldValidate: true });
+        setValue("license_fee", fee, { shouldValidate: true })
       }
     }
-  }, [license_type, license_category, license_fee, setValue, fees]);
+  }, [license_type, license_category, license_fee, setValue, fees])
 
   const onSubmit = (values: z.infer<typeof licenseInfoSchema>) => {
-    onNext(values);
-  };
+    onNext(values)
+  }
 
   return (
     <div>
@@ -176,11 +150,11 @@ const StepFour = ({ onNext, onBack, formData }: StepFourProps) => {
                     <Select
                       value={field.value}
                       onValueChange={(value) => {
-                        field.onChange(value);
+                        field.onChange(value)
                         // Reset category when type changes
                         setValue("license_category", "", {
                           shouldValidate: false,
-                        });
+                        })
                       }}
                     >
                       <FormControl>
@@ -191,9 +165,7 @@ const StepFour = ({ onNext, onBack, formData }: StepFourProps) => {
                       <SelectContent>
                         {licenseTypes.map((type) => (
                           <SelectItem key={type} value={type}>
-                            {type === "New License"
-                              ? "New License (Shatiga Cusub)"
-                              : "Renewal (Cusboonaysiin)"}
+                            {type === "New License" ? "New License (Shatiga Cusub)" : "Renewal (Cusboonaysiin)"}
                           </SelectItem>
                         ))}
                       </SelectContent>
@@ -209,19 +181,11 @@ const StepFour = ({ onNext, onBack, formData }: StepFourProps) => {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>License Category</FormLabel>
-                    <Select
-                      value={field.value}
-                      onValueChange={field.onChange}
-                      disabled={!license_type}
-                    >
+                    <Select value={field.value} onValueChange={field.onChange} disabled={!license_type}>
                       <FormControl>
                         <SelectTrigger className="w-full">
                           <SelectValue
-                            placeholder={
-                              license_type
-                                ? "Select license category"
-                                : "Select license type first"
-                            }
+                            placeholder={license_type ? "Select license category" : "Select license type first"}
                           />
                         </SelectTrigger>
                       </FormControl>
@@ -242,7 +206,7 @@ const StepFour = ({ onNext, onBack, formData }: StepFourProps) => {
 
           <div>
             <Label className="text-base font-medium mb-3 block">
-              2. License Area <span className="text-red-500">*</span>
+              2. Mining Area <span className="text-red-500">*</span>
             </Label>
             <FormField
               control={form.control}
@@ -250,22 +214,8 @@ const StepFour = ({ onNext, onBack, formData }: StepFourProps) => {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Mining Area</FormLabel>
-                  <FormDescription>
-                    Describe the area where mining activities will take place
-                  </FormDescription>
                   <FormControl>
-                    <Select value={field.value} onValueChange={field.onChange}>
-                      <SelectTrigger className="w-full">
-                        <SelectValue placeholder="Select mining area" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {miningArea.map((area, index) => (
-                          <SelectItem key={index} value={area}>
-                            {area}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
+                    <AreaMultiSelect options={areas} value={field.value} onChange={field.onChange} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -282,37 +232,24 @@ const StepFour = ({ onNext, onBack, formData }: StepFourProps) => {
               <CardContent>
                 <div className="space-y-2">
                   <div className="flex justify-between">
-                    <span className="text-gray-600 dark:text-gray-200">
-                      License Type:
-                    </span>
-                    <span className="font-medium">
-                      {license_type || "Not selected"}
-                    </span>
+                    <span className="text-gray-600 dark:text-gray-200">License Type:</span>
+                    <span className="font-medium">{license_type || "Not selected"}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-gray-600 dark:text-gray-200">
-                      License Category:
-                    </span>
-                    <span className="font-medium">
-                      {license_category || "Not selected"}
-                    </span>
+                    <span className="text-gray-600 dark:text-gray-200">License Category:</span>
+                    <span className="font-medium">{license_category || "Not selected"}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-gray-600 dark:text-gray-200">
-                      Mining Area:
-                    </span>
+                    <span className="text-gray-600 dark:text-gray-200">Mining Area:</span>
                     <span className="font-medium">
-                      {license_area || "Not selected"}
+                      {license_area.length > 0 ? license_area.join(", ") : "Not selected"}
                     </span>
                   </div>
                   <div className="border-t pt-2 mt-2">
                     <div className="flex justify-between text-lg font-bold">
                       <span>Total Fee:</span>
                       <span className="text-blue-600">
-                        $
-                        {license_fee
-                          ? Number.parseInt(license_fee).toLocaleString()
-                          : "0"}
+                        ${license_fee ? Number.parseInt(license_fee).toLocaleString() : "0"}
                       </span>
                     </div>
                   </div>
@@ -330,7 +267,7 @@ const StepFour = ({ onNext, onBack, formData }: StepFourProps) => {
         </form>
       </Form>
     </div>
-  );
-};
+  )
+}
 
-export default StepFour;
+export default StepFour

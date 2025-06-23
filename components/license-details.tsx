@@ -185,6 +185,12 @@ export default function LicenseDetails({ license }: { license: License }) {
                       {license.license_category}
                     </p>
                   </div>
+                  <div className="mb-4">
+                    <p className="text-sm text-gray-500">Mining Area</p>
+                    <p className="font-medium text-gray-900 dark:text-gray-200">
+                      {license.license_area.join(", ")}
+                    </p>
+                  </div>
                 </div>
 
                 <div>

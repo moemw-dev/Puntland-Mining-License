@@ -1,0 +1,1 @@
+ALTER TABLE "sample_analysis" RENAME COLUMN "unit" TO "amount";

@@ -31,7 +31,7 @@ export const licensesSchema = z.object({
   license_type: z.string().min(1, "License type is required"),
   license_category: z.string().min(1, "License category is required"),
   license_fee: z.string().min(1, "License fee is required"),
-  license_area: z.string().min(1, "License area is required"),
+  license_area: z.array(z.string()).min(1, "License area is required"),
 })
 
 // Step-by-step schemas for multi-step forms
@@ -72,8 +72,11 @@ export const fourthStepSchema = z.object({
 export const sampleAnalysisSchema = z.object({
   ref_id: z.string().min(1, "Reference ID is required"),
   name: z.string().min(1, "Name is required"),
+  nationality: z.string().min(1, "Nationality is required"),
   passport_no: z.string().min(1, "Passport number is required"),
-  kilo_gram: z.string().min(1, "Weight in kilograms is required"),
+  mineral_type: z.string().min(1, "Mineral type is required"),
+  unit: z.string().min(1, "Unit is required"),
+  amount: z.string().min(1, "Amount is required"),
 })
 
 // Delete license schema
@@ -108,7 +111,7 @@ export const updateLicenseSchema = z.object({
   // License Information (all optional)
   license_type: z.string().optional(),
   license_category: z.string().optional(),
-  license_area: z.string().optional(),
+  license_area: z.array(z.string()).optional(),
   calculated_fee: z.string().optional(),
   expire_date: z.string().optional(),
 

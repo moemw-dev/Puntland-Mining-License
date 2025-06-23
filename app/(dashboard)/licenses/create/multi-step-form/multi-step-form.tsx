@@ -44,7 +44,7 @@ export default function MultiStepForm() {
     license_type: "",
     license_category: "",
     license_fee: "",
-    license_area: "",
+    license_area: [],
   })
 
   const handleNextStep = (data: Partial<LicenseFormData>) => {

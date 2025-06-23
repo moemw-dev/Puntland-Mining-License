@@ -8,7 +8,7 @@ type LicenseProps = {
   companyName: string;
   licenseType: string;
   license_category:string
-  miningArea: string;
+  miningArea: string[];
   signature: boolean;
   issueDate: string;
   expiryDate: string;
@@ -100,7 +100,9 @@ export default function MiningLicense({
           </p>
           <p>
             Shirkaddu waxay ka shaqayn karta Degmada/Mining Area:{" "}
-            <span className="font-semibold">{miningArea}</span>
+            <span className="font-semibold">
+              {miningArea.join(", ")}
+            </span>
           </p>
           <div className="flex justify-between mt-2">
             <p>

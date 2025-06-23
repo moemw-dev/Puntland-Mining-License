@@ -1,0 +1,1 @@
+ALTER TABLE "sample_analysis" ADD COLUMN "nationality" varchar(255) NOT NULL;
