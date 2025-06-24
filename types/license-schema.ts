@@ -71,11 +71,12 @@ export const fourthStepSchema = z.object({
 // Sample analysis schema
 export const sampleAnalysisSchema = z.object({
   ref_id: z.string().min(1, "Reference ID is required"),
+
   name: z.string().min(1, "Name is required"),
   nationality: z.string().min(1, "Nationality is required"),
   passport_no: z.string().min(1, "Passport number is required"),
   mineral_type: z.string().min(1, "Mineral type is required"),
-  unit: z.string().min(1, "Unit is required"),
+  unit: z.string().min(1, "Unit field is required"),
   amount: z.string().min(1, "Amount is required"),
 })
 

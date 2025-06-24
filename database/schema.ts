@@ -122,16 +122,18 @@ export const licenses = pgTable("licenses", {
 // 👉 Sample Analysis Table
 export const sampleAnalysis = pgTable("sample_analysis", {
   id: uuid("id").notNull().primaryKey().defaultRandom().unique(),
+
   ref_id: varchar("license_ref_id", { length: 255 }).notNull(),
   
   name: varchar("name", { length: 255 }).notNull(),
   nationality: varchar("nationality", { length: 255 }).notNull(),
   passport_no: varchar("passport_no", { length: 255 }).notNull(),
   amount: decimal("amount", { precision: 10, scale: 2 }).notNull(),
-  kilo_gram: decimal("kilo_gram", { precision: 10, scale: 2 }).notNull(),
+  unit: varchar("unit", { length: 255 }).notNull(),
   mineral_type: varchar("mineral_type", { length: 255 }).notNull(),
 
   signature: boolean("signature").default(false),
+
   created_at: timestamp("created_at", { withTimezone: true }).defaultNow(),
   updated_at: timestamp("updated_at", { withTimezone: true }).defaultNow(),
 });

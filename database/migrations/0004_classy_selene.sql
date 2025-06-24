@@ -1,1 +1,0 @@
-ALTER TABLE "sample_analysis" ADD COLUMN "unit" varchar(255) NOT NULL;

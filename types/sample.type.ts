@@ -12,7 +12,7 @@ export const updateSampleAnalysisSchema = z.object({
   nationality: z.string().min(1, "Nationality is required"),
   passport_no: z.string().min(1, "Passport number is required"),
   mineral_type: z.string().min(1, "Mineral type is required"),
-  unit: z.string().min(1, "Kilogram amount is required"),
+  unit: z.string().min(1, "Unit amount is required"),
   amount: z.string().min(1, "Amount is required"),
 })
 
@@ -21,7 +21,10 @@ export interface BaseSample {
   id: string
   name: string
   passport_no: string
-  kilo_gram: number
+  nationality: string
+  mineral_type: string
+  unit: string
+  amount: string
   created_at: string
 }
 

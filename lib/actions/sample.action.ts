@@ -69,7 +69,7 @@ export const RegisterSampleAnalysis = actionClient
 // Create the update sample action
 export const UpdateSampleAnalysis = actionClient
   .schema(updateSampleAnalysisSchema)
-  .action(async ({ parsedInput: { id, name, passport_no, kilo_gram } }) => {
+  .action(async ({ parsedInput: { id, name, passport_no, nationality, mineral_type, unit, amount } }) => {
     try {
       // Update the sample analysis record where ref_id matches
       await db
@@ -77,7 +77,10 @@ export const UpdateSampleAnalysis = actionClient
         .set({
           name,
           passport_no,
-          kilo_gram,
+          nationality,
+          mineral_type,
+          unit,
+          amount,
           updated_at: new Date(), // Update the timestamp
         })
         .where(eq(sampleAnalysis.id, id));

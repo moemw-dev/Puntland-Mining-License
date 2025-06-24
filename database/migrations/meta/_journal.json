@@ -5,43 +5,8 @@
     {
       "idx": 0,
       "version": "7",
-      "when": 1749973862297,
-      "tag": "0000_bizarre_bishop",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "7",
-      "when": 1750668430913,
-      "tag": "0001_conscious_firebrand",
-      "breakpoints": true
-    },
-    {
-      "idx": 2,
-      "version": "7",
-      "when": 1750687430764,
-      "tag": "0002_sweet_hitman",
-      "breakpoints": true
-    },
-    {
-      "idx": 3,
-      "version": "7",
-      "when": 1750687963716,
-      "tag": "0003_strange_sally_floyd",
-      "breakpoints": true
-    },
-    {
-      "idx": 4,
-      "version": "7",
-      "when": 1750690144041,
-      "tag": "0004_classy_selene",
-      "breakpoints": true
-    },
-    {
-      "idx": 5,
-      "version": "7",
-      "when": 1750694790227,
-      "tag": "0005_lame_night_thrasher",
+      "when": 1750739920726,
+      "tag": "0000_flaky_sharon_carter",
       "breakpoints": true
     }
   ]

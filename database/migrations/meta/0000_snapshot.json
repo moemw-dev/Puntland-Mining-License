@@ -1,5 +1,5 @@
 {
-  "id": "dbd38756-974c-4cf1-bbda-c0e346975723",
+  "id": "6b4eae79-fd6b-4520-aa1c-36af7d4377c7",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -212,7 +212,7 @@
         },
         "license_area": {
           "name": "license_area",
-          "type": "text",
+          "type": "text[]",
           "primaryKey": false,
           "notNull": false
         },
@@ -406,15 +406,33 @@
           "primaryKey": false,
           "notNull": true
         },
+        "nationality": {
+          "name": "nationality",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": true
+        },
         "passport_no": {
           "name": "passport_no",
           "type": "varchar(255)",
           "primaryKey": false,
           "notNull": true
         },
-        "kilo_gram": {
-          "name": "kilo_gram",
+        "amount": {
+          "name": "amount",
           "type": "numeric(10, 2)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "unit": {
+          "name": "unit",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "mineral_type": {
+          "name": "mineral_type",
+          "type": "varchar(255)",
           "primaryKey": false,
           "notNull": true
         },
