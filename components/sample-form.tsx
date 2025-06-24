@@ -180,7 +180,7 @@ export default function SampleForm() {
 
             {/* Dynamic Form Inputs */}
             <p className="mb-6 text-justify leading-relaxed">
-              Ministry of Energy, Minerals and Water (MOEMW) of Puntland hereby authorizes Mr./Ms.{" "}
+              The Ministry of Energy, Minerals and Water (MOEMW) of Puntland hereby authorizes Mr./Ms.{" "}
               <FormField
                 control={form.control}
                 name="name"
@@ -280,8 +280,7 @@ export default function SampleForm() {
                   </FormItem>
                 )}
               />{" "}
-              samples of minerals from Puntland State of Somalia for testing and analysis purposes. These minerals have
-              zero commercial value.
+              samples of minerals from Puntland State of Somalia for testing and analysis purposes. These minerals have no commercial value.
             </p>
 
             {/* Form Errors Display */}

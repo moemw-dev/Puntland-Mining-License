@@ -297,7 +297,7 @@ export default function ReusableSampleForm({
             <div className="text-center font-bold text-sm">
               <p>Puntland States of Somalia</p>
               <p>Ministry of Energy Minerals & Water</p>
-              <p className="border p-1 my-0.5 border-black">
+              <p className="border p-1 my-3 border-black">
                 OFFICE OF THE DIRECTOR GENERAL
               </p>
             </div>
@@ -345,10 +345,10 @@ export default function ReusableSampleForm({
             {/* Dynamic Form Inputs */}
             <div className="mb-6 text-justify leading-relaxed">
               <span>
-                Ministry of Energy, Minerals and Water (MOEMW) of Puntland
+                The Ministry of Energy, Minerals and Water (MOEMW) of Puntland
                 hereby authorizes Mr./Ms.{" "}
                 {isReadOnly ? (
-                  <span className="font-medium">{form.getValues("name")}</span>
+                  <span className="font-medium uppercase">{form.getValues("name")},</span>
                 ) : (
                   <FormField
                     control={form.control}
@@ -366,8 +366,8 @@ export default function ReusableSampleForm({
                 )}{" "}
                 a citizen of{" "}
                 {isReadOnly ? (
-                  <span className="font-medium">
-                    {form.getValues("nationality")}
+                  <span className="font-medium uppercase">
+                    {form.getValues("nationality")},
                   </span>
                 ) : (
                   <FormField
@@ -386,7 +386,7 @@ export default function ReusableSampleForm({
                 )}{" "}
                 holding Passport No.{" "}
                 {isReadOnly ? (
-                  <span className="font-medium">
+                  <span className="font-medium uppercase">
                     {form.getValues("passport_no")}
                   </span>
                 ) : (
@@ -406,7 +406,7 @@ export default function ReusableSampleForm({
                 )}{" "}
                 to take{" "}
                 {isReadOnly ? (
-                  <span className="font-medium">
+                  <span className="font-medium ">
                     {form.getValues("amount")}
                   </span>
                 ) : (
@@ -428,7 +428,7 @@ export default function ReusableSampleForm({
                   />
                 )}{" "}
                 {isReadOnly ? (
-                  <span className="font-medium">{form.getValues("unit")}</span>
+                  <span className="font-medium uppercase">{form.getValues("unit")}</span>
                 ) : (
                   <FormField
                     control={form.control}
@@ -443,19 +443,20 @@ export default function ReusableSampleForm({
                             <SelectValue placeholder="Unit" />
                           </SelectTrigger>
                           <SelectContent>
-                            <SelectItem value="milligram">Milligram</SelectItem>
-                            <SelectItem value="gram">Gram</SelectItem>
-                            <SelectItem value="kilogram">Kilogram</SelectItem>
-                            <SelectItem value="ton">Metric Ton</SelectItem>
+                            <SelectItem value="milligrams">Milligrams</SelectItem>
+                            <SelectItem value="grams">Grams</SelectItem>
+                            <SelectItem value="kilograms">Kilograms</SelectItem>
+                            <SelectItem value="tons">Metric Tons</SelectItem>
                           </SelectContent>
                         </Select>
                       </span>
                     )}
                   />
-                )}{" "}
-                of{" "}
+                )}
+                {" "}
+                 of{" "}
                 {isReadOnly ? (
-                  <span className="font-medium">
+                  <span className="font-medium uppercase">
                     {form.getValues("mineral_type")}
                   </span>
                 ) : (
@@ -473,9 +474,8 @@ export default function ReusableSampleForm({
                     )}
                   />
                 )}{" "}
-                samples of minerals from Puntland State of Somalia for testing
-                and analysis purposes. These minerals have zero commercial
-                value.
+                <span className="font-medium uppercase">mineral samples</span> from Puntland State of Somalia for testing
+                and analysis purposes. These minerals have no commercial value.
               </span>
             </div>
 
@@ -559,7 +559,7 @@ export default function ReusableSampleForm({
           </div>
 
           {/* Signature Section */}
-          <div className="mt-8 text-center">
+          <div className="mt-14 text-center">
             <p className="font-bold">Eng. Ismail Mohamed Hassan</p>
             <p className="mt-1">
               Director General of the Ministry of Energy, Minerals & Water
@@ -580,7 +580,7 @@ export default function ReusableSampleForm({
           </div>
 
           {/* Footer */}
-          <div className="mt-8 text-center text-sm pt-2">
+          <div className="mt-14 text-center text-sm pt-2">
             <p>
               <span className="font-bold">Tel:</span> +252 907 993813, +252
               661711119
