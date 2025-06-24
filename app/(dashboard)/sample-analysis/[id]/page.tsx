@@ -5,13 +5,26 @@ import { useEffect, useState } from "react"
 import { UpdateSampleAnalysis } from "@/lib/actions/sample.action"
 import ReusableSampleForm from "../_components/view-sample"
 
+
+//  name: "",
+//       nationality: "",
+//       passportNo: "",
+//       amount: "",
+//       unit: "kilogram",
+//       mineralType: "",
 // Use the same interface as the reusable component
 interface SampleData {
   id?: string
   ref_id: string
+
   name: string
+  nationality: string 
   passport_no: string
-  kilo_gram: string
+  amount: string
+  unit: string
+  mineral_type: string
+
+
   signature?: boolean
   created_at?: string
   updated_at?: string
@@ -22,8 +35,12 @@ type TSample = {
   id: string
   ref_id: string
   name: string
-  passport_no: string
-  kilo_gram: string
+  nationality: string
+  passport_no: string 
+  amount: string
+  unit: string
+  mineral_type: string
+
   signature?: boolean
   created_at: string
   updated_at: string
@@ -60,7 +77,10 @@ export default function SampleDetailPage() {
         id: data.id,
         name: data.name,
         passport_no: data.passport_no,
-        kilo_gram: data.kilo_gram,
+        amount: data.amount,
+        unit: data.unit,
+        mineral_type: data.mineral_type,
+        nationality: data.nationality,
       })
 
       if (result?.data?.success) {
@@ -87,7 +107,10 @@ export default function SampleDetailPage() {
           ref_id: data.ref_id,
           name: data.name,
           passport_no: data.passport_no,
-          kilo_gram: data.kilo_gram,
+          amount: data.amount,
+          unit: data.unit,
+          mineral_type: data.mineral_type,
+          nationality: data.nationality,
           signature: data.signature || false,
           created_at: data.created_at || sampleData!.created_at,
           updated_at: new Date().toISOString(),
@@ -131,7 +154,10 @@ export default function SampleDetailPage() {
     ref_id: sampleData.ref_id,
     name: sampleData.name,
     passport_no: sampleData.passport_no,
-    kilo_gram: sampleData.kilo_gram,
+    amount: sampleData.amount,
+    unit: sampleData.unit,
+    mineral_type: sampleData.mineral_type,
+    nationality: sampleData.nationality,
     signature: sampleData.signature,
     created_at: sampleData.created_at,
     updated_at: sampleData.updated_at,
