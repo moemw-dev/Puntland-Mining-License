@@ -98,7 +98,7 @@ const StepTwo = ({ onNext, onBack, formData }: StepTwoProps) => {
                 <FormControl>
                   <div className="relative">
                     <IdCard className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500" />
-                    <Input {...field} className="pl-10" placeholder="Enter email address" type="number" />
+                    <Input {...field} className="pl-10" placeholder="Enter your ID card number / passport number" />
                   </div>
                 </FormControl>
                 <FormMessage />

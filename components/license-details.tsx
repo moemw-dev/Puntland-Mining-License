@@ -286,7 +286,7 @@ export default function LicenseDetails({ license }: { license: License }) {
                           </div>
 
                           {/* Signature Toggle - only for admin users */}
-                          {session?.user?.role === "MINISTER" && (
+                          {session?.user?.role === "MINISTER" || session?.user?.role === "GENERAL_DIRECTOR" && (
                             <div className="flex items-center mr-16">
                               <div className="flex items-center space-x-2">
                                 <p className="text-sm text-gray-500">
