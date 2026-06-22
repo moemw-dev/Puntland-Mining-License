@@ -39,7 +39,7 @@ export function LicenseActionsCell({ license }: LicenseActionsCellProps) {
   const router = useRouter()
 
   // Check if user has admin privileges
-  const hasAdminPrivileges = ["GENERAL_DIRECTOR","DIRECTOR", "MINISTER"].includes(session?.user?.role || "")
+  const hasAdminPrivileges = ["SUPER_ADMIN", "GENERAL_DIRECTOR", "DIRECTOR", "MINISTER"].includes(session?.user?.role || "")
 
   // Handle delete action
   const handleDelete = async () => {
