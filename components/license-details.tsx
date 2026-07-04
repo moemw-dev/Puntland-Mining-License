@@ -322,7 +322,7 @@ export default function LicenseDetails({ license }: { license: License }) {
                         companyName={license.company_name}
                         licenseType={license.business_type}
                         miningArea={license.license_area}
-                        signature={license.signature}
+                        signature={signature}
                         issueDate={license.created_at}
                         expiryDate={license.expire_date}
                         qrCodeUrl="/assets/sample-qr.png" // Optional
